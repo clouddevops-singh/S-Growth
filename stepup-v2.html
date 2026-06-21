@@ -510,11 +510,11 @@
       border-radius: 50%;
       object-fit: cover;
       object-position: top;
-      display: none;
       border: 3px solid var(--bg);
       position: relative;
       z-index: 1;
     }
+    .avatar-img:not([src]), .avatar-img[src=""] { display: none; }
 
     .avatar-placeholder {
       width: 150px;
@@ -751,8 +751,8 @@
       height: 100%;
       object-fit: cover;
       object-position: top;
-      display: none
     }
+    .about-photo-frame img:not([src]), .about-photo-frame img[src=""] { display: none; }
 
     .about-photo-placeholder {
       width: 100%;
@@ -1475,97 +1475,111 @@
     /* ════════════════════════════════════════
    GOALS
 ════════════════════════════════════════ */
+    /* ── GOAL CATEGORY TABS ── */
+    .goal-tabs-row{display:flex;gap:4px;background:var(--glass);border:1px solid var(--border2);border-radius:16px;padding:5px;margin-bottom:20px;flex-wrap:wrap}
+    .gtab{padding:7px 16px;border-radius:12px;font-size:0.78rem;font-weight:700;color:var(--txt3);transition:all 0.2s;border:none;background:none;cursor:pointer}
+    .gtab:hover:not(.active){color:var(--txt2);background:var(--glass-b)}
+    .gtab.active{background:linear-gradient(135deg,var(--p1),#7c3aed);color:#fff}
+    .gtab .g-cnt{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;border-radius:9px;font-size:0.62rem;padding:0 5px;margin-left:5px;font-weight:800}
+    .gtab.active .g-cnt{background:rgba(255,255,255,0.25)}
+    .gtab:not(.active) .g-cnt{background:var(--border2);color:var(--txt2)}
+
+    /* ── GOAL CARD BASE ── */
     .goal-card {
       background: var(--glass);
       border: 1px solid var(--border2);
       border-radius: 18px;
-      padding: 20px 24px;
+      padding: 18px 20px;
       display: flex;
-      align-items: center;
-      gap: 18px;
-      margin-bottom: 12px;
-      transition: border-color 0.2s, transform 0.2s;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 10px;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+    .goal-card:hover { border-color: var(--border); transform: translateX(3px); }
+
+    /* ── COMPLETED STATE ── */
+    .goal-card.done {
+      border-color: rgba(16,185,129,0.35);
+      background: rgba(16,185,129,0.04);
+      opacity: 0.85;
+    }
+    .goal-card.done .g-title { text-decoration: line-through; color: var(--txt3); }
+    .goal-card.done .g-bar-fill { background: linear-gradient(90deg,var(--g1),var(--g2)); }
+
+    /* ── FAILED / WARNING STATE ── */
+    .goal-card.failed {
+      border-color: rgba(239,68,68,0.4);
+      background: rgba(239,68,68,0.05);
+      animation: failPulse 3s ease-in-out infinite;
+    }
+    @keyframes failPulse { 0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0)} 50%{box-shadow:0 0 16px 0 rgba(239,68,68,0.15)} }
+    .goal-card.failed .g-title { color: #fca5a5; }
+    .goal-card.failed .g-bar-fill { background: linear-gradient(90deg,#ef4444,#f87171); }
+    .goal-card.failed .g-pct { color: #ef4444; }
+    .fail-badge {
+      position:absolute;top:12px;right:12px;
+      background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);
+      color:#ef4444;border-radius:8px;padding:2px 8px;font-size:0.62rem;font-weight:800;
+      letter-spacing:0.5px;text-transform:uppercase;
+    }
+    .done-badge {
+      position:absolute;top:12px;right:12px;
+      background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);
+      color:var(--g1);border-radius:8px;padding:2px 8px;font-size:0.62rem;font-weight:800;
     }
 
-    .goal-card:hover {
-      border-color: var(--border);
-      transform: translateX(4px)
+    /* ── OVERDUE WARNING ── */
+    .goal-card.overdue {
+      border-color: rgba(245,158,11,0.4);
+      background: rgba(245,158,11,0.04);
     }
+    .overdue-badge {
+      position:absolute;top:12px;right:12px;
+      background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);
+      color:var(--or);border-radius:8px;padding:2px 8px;font-size:0.62rem;font-weight:800;
+      animation:warnBlink 2s ease-in-out infinite;
+    }
+    @keyframes warnBlink{0%,100%{opacity:1}50%{opacity:0.5}}
 
-    .g-icon {
-      font-size: 1.8rem;
-      flex-shrink: 0
-    }
+    /* ── GOAL CARD PARTS ── */
+    .g-icon { font-size: 1.6rem; flex-shrink: 0; margin-top: 2px; }
+    .g-content { flex: 1; min-width: 0; }
+    .g-title { font-size: 0.86rem; font-weight: 700; color: var(--txt); margin-bottom: 8px; padding-right: 70px; }
+    .g-bar-track { height: 8px; background: var(--bg3); border-radius: 8px; overflow: hidden; }
+    .g-bar-fill { height: 100%; border-radius: 8px; background: linear-gradient(90deg,var(--g1),var(--g2)); transition: width 0.8s ease; }
+    .g-meta { display: flex; justify-content: space-between; margin-top: 5px; align-items: center; }
+    .g-pct { font-size: 0.7rem; font-weight: 800; color: var(--g1); }
+    .g-date { font-size: 0.68rem; color: var(--txt3); }
+    .g-ctrl { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+    .g-btn { border-radius: 8px; padding: 4px 9px; font-size: 0.68rem; font-weight: 700; border: 1px solid; transition: all 0.2s; cursor: pointer; white-space: nowrap; }
+    .g-btn-p { background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.3);color:var(--g1); }
+    .g-btn-m { background:var(--glass);border-color:var(--border2);color:var(--txt3); }
+    .g-btn-done { background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.3);color:var(--g1);font-size:0.65rem; }
+    .g-btn-fail { background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.25);color:#ef4444;font-size:0.65rem; }
+    .g-btn-undo { background:var(--glass);border-color:var(--border2);color:var(--txt3);font-size:0.65rem; }
 
-    .g-content {
-      flex: 1
-    }
+    /* ── GOAL BADGES ── */
+    .g-badge { position:absolute;top:-10px;right:12px;font-size:0.62rem;font-weight:700;padding:2px 8px;border-radius:20px; }
+    .done-badge { background:rgba(16,185,129,0.15);color:var(--g1); }
+    .fail-badge { background:rgba(239,68,68,0.15);color:#ef4444; }
+    .overdue-badge { background:rgba(245,158,11,0.15);color:var(--or);animation:warnBlink 2s ease-in-out infinite; }
+    .goal-card { position:relative; }
 
-    .g-title {
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: var(--txt);
-      margin-bottom: 8px
+    /* ── ARCHIVE SECTIONS ── */
+    .archive-toggle {
+      display:flex;align-items:center;gap:10px;cursor:pointer;
+      background:none;border:none;width:100%;padding:12px 0;
+      color:var(--txt2);font-size:0.82rem;font-weight:700;
+      border-top:1px solid var(--border2);margin-top:16px;
     }
-
-    .g-bar-track {
-      height: 8px;
-      background: var(--bg3);
-      border-radius: 8px;
-      overflow: hidden
-    }
-
-    .g-bar-fill {
-      height: 100%;
-      border-radius: 8px;
-      background: linear-gradient(90deg, var(--g1), var(--g2));
-      transition: width 1s ease
-    }
-
-    .g-meta {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 5px
-    }
-
-    .g-pct {
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: var(--g1)
-    }
-
-    .g-date {
-      font-size: 0.7rem;
-      color: var(--txt3)
-    }
-
-    .g-ctrl {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      flex-shrink: 0
-    }
-
-    .g-btn {
-      border-radius: 8px;
-      padding: 4px 10px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      border: 1px solid;
-      transition: all 0.2s
-    }
-
-    .g-btn-p {
-      background: rgba(16, 185, 129, 0.1);
-      border-color: rgba(16, 185, 129, 0.3);
-      color: var(--g1)
-    }
-
-    .g-btn-m {
-      background: var(--glass);
-      border-color: var(--border2);
-      color: var(--txt3)
-    }
+    .archive-toggle:hover{color:var(--txt)}
+    .archive-arrow{transition:transform 0.3s;font-size:0.7rem;color:var(--txt3)}
+    .archive-body{display:none;margin-top:8px}
+    .archive-body.open{display:block;animation:pageIn 0.3s ease}
+    .archive-count{background:var(--border2);color:var(--txt2);border-radius:20px;padding:2px 8px;font-size:0.65rem;font-weight:700}
+    .empty-state{text-align:center;padding:24px;color:var(--txt3);font-size:0.82rem}
 
     .vision-cards {
       display: flex;
@@ -2348,51 +2362,78 @@
     <div class="container">
       <div class="section-eyebrow reveal">WHERE I'M HEADED</div>
       <h2 class="section-h reveal d1">Goals & <span class="grad-text">Vision</span></h2>
-      <p class="section-sub reveal d2">Tracked, honest, and updated. Not just wishes — targets with progress.</p>
-      <div class="grid2" style="gap:40px;align-items:start">
+      <p class="section-sub reveal d2">Daily · Weekly · Monthly · Yearly — tracked, completed, and honestly reviewed.</p>
+
+      <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:start">
+
+        <!-- LEFT: Goal Tracker -->
         <div class="reveal-l">
-          <div
-            style="font-size:0.72rem;color:var(--txt3);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:20px">
-            2026 GOALS</div>
+
+          <!-- Category tabs -->
+          <div class="goal-tabs-row">
+            <button class="gtab active" onclick="switchGoalTab('daily',this)">🌅 Daily <span class="g-cnt" id="cnt-daily">0</span></button>
+            <button class="gtab" onclick="switchGoalTab('weekly',this)">📆 Weekly <span class="g-cnt" id="cnt-weekly">0</span></button>
+            <button class="gtab" onclick="switchGoalTab('monthly',this)">🗓️ Monthly <span class="g-cnt" id="cnt-monthly">0</span></button>
+            <button class="gtab" onclick="switchGoalTab('yearly',this)">🏆 Yearly <span class="g-cnt" id="cnt-yearly">0</span></button>
+          </div>
+
+          <!-- Active goals list -->
           <div id="goals-list"></div>
-          <button onclick="addGoal()"
-            style="width:100%;background:rgba(139,92,246,0.08);border:1.5px dashed rgba(139,92,246,0.3);color:var(--p2);border-radius:16px;padding:14px;font-size:0.82rem;font-weight:700;margin-top:8px;transition:all 0.2s"
+
+          <!-- Add button -->
+          <button onclick="addGoal()" id="add-goal-btn"
+            style="width:100%;background:rgba(139,92,246,0.08);border:1.5px dashed rgba(139,92,246,0.3);color:var(--p2);border-radius:16px;padding:13px;font-size:0.82rem;font-weight:700;margin-top:4px;transition:all 0.2s;cursor:pointer"
             onmouseover="this.style.background='rgba(139,92,246,0.14)'"
-            onmouseout="this.style.background='rgba(139,92,246,0.08)'">+ Add New Goal</button>
+            onmouseout="this.style.background='rgba(139,92,246,0.08)'">+ Add Goal</button>
+
+          <!-- Completed archive -->
+          <button class="archive-toggle" onclick="toggleArchive('completed-archive','arr-done')">
+            <span>✅ Completed Goals</span>
+            <span class="archive-count" id="cnt-done">0</span>
+            <span style="flex:1"></span>
+            <span class="archive-arrow" id="arr-done">▼</span>
+          </button>
+          <div class="archive-body" id="completed-archive"></div>
+
+          <!-- Failed archive -->
+          <button class="archive-toggle" onclick="toggleArchive('failed-archive','arr-fail')">
+            <span>⚠️ Missed / Failed Goals</span>
+            <span class="archive-count" id="cnt-fail" style="background:rgba(239,68,68,0.15);color:#ef4444">0</span>
+            <span style="flex:1"></span>
+            <span class="archive-arrow" id="arr-fail">▼</span>
+          </button>
+          <div class="archive-body" id="failed-archive"></div>
+
         </div>
+
+        <!-- RIGHT: Vision + Affirmation -->
         <div class="reveal-r">
-          <div
-            style="font-size:0.72rem;color:var(--txt3);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:20px">
-            5-YEAR VISION</div>
+          <div style="font-size:0.72rem;color:var(--txt3);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:20px">5-YEAR VISION</div>
           <div class="vision-cards">
             <div class="vision-card glass">
               <div class="v-cat">☁️ CAREER</div>
-              <p class="bio-text" contenteditable="true">Lead cloud-native infrastructure at scale. Certified Kubernetes
-                expert. Build resilient systems that serve millions.</p>
+              <p class="bio-text" contenteditable="true">Lead cloud-native infrastructure at scale. Certified Kubernetes expert. Build resilient systems that serve millions.</p>
             </div>
             <div class="vision-card glass">
               <div class="v-cat">🧠 PERSONAL</div>
-              <p class="bio-text" contenteditable="true">Become the most disciplined, clear-minded version of myself.
-                Daily habits that run on autopilot. Mental strength under pressure.</p>
+              <p class="bio-text" contenteditable="true">Become the most disciplined, clear-minded version of myself. Daily habits that run on autopilot. Mental strength under pressure.</p>
             </div>
             <div class="vision-card glass">
               <div class="v-cat">💰 FINANCIAL</div>
-              <p class="bio-text" contenteditable="true">Financial independence through high-value skills, strategic
-                investments, and multiple income streams. Freedom to choose.</p>
+              <p class="bio-text" contenteditable="true">Financial independence through high-value skills, strategic investments, and multiple income streams. Freedom to choose.</p>
             </div>
             <div class="vision-card glass">
               <div class="v-cat">💼 BUSINESS</div>
-              <p class="bio-text" contenteditable="true">Build deep business communication skills. Speak on stages. Lead
-                with confidence. Bridge technical and business worlds.</p>
+              <p class="bio-text" contenteditable="true">Build deep business communication skills. Speak on stages. Lead with confidence. Bridge technical and business worlds.</p>
             </div>
           </div>
           <div class="affirm-card">
-            <div class="affirm-text" id="affirm-txt">"I am becoming the person I need to be to achieve the life I want
-              to live."</div>
+            <div class="affirm-text" id="affirm-txt">"I am becoming the person I need to be to achieve the life I want to live."</div>
             <div class="affirm-by">— My Daily Affirmation</div>
             <button class="affirm-next" onclick="nextAffirm()">Next Affirmation →</button>
           </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -2424,13 +2465,25 @@
     ];
 
     let goals = JSON.parse(localStorage.getItem(GK) || 'null') || [
-      { icon: '🏋️', title: 'Exercise every day for 90 days', pct: 35, deadline: 'Sep 2026' },
-      { icon: '📚', title: 'Read 12 books this year', pct: 50, deadline: 'Dec 2026' },
-      { icon: '🧘', title: 'Meditate 10 min daily — no breaks', pct: 60, deadline: 'Dec 2026' },
-      { icon: '☸️', title: 'Pass CKA certification', pct: 20, deadline: 'Oct 2026' },
-      { icon: '✍️', title: 'Journal every single day', pct: 75, deadline: 'Dec 2026' },
-      { icon: '🗣️', title: 'Public speaking — give 3 talks', pct: 15, deadline: 'Dec 2026' },
+      { icon: '🏋️', title: 'Exercise 30 min', pct: 35, deadline: '2026-06-30', category: 'daily', status: 'active', completedDate: null, failedDate: null },
+      { icon: '📖', title: 'Read 10 pages', pct: 50, deadline: '2026-06-30', category: 'daily', status: 'active', completedDate: null, failedDate: null },
+      { icon: '🧘', title: 'Meditate 10 min', pct: 60, deadline: '2026-06-30', category: 'daily', status: 'active', completedDate: null, failedDate: null },
+      { icon: '✍️', title: 'Write journal entry', pct: 75, deadline: '2026-06-30', category: 'daily', status: 'active', completedDate: null, failedDate: null },
+      { icon: '☸️', title: 'Study K8s 1 hour', pct: 40, deadline: '2026-06-30', category: 'daily', status: 'active', completedDate: null, failedDate: null },
+      { icon: '📝', title: 'Review weekly goals', pct: 0, deadline: '2026-06-28', category: 'weekly', status: 'active', completedDate: null, failedDate: null },
+      { icon: '🏃', title: 'Run 20km total', pct: 45, deadline: '2026-06-28', category: 'weekly', status: 'active', completedDate: null, failedDate: null },
+      { icon: '💡', title: 'Learn one new DevOps concept', pct: 70, deadline: '2026-06-28', category: 'weekly', status: 'active', completedDate: null, failedDate: null },
+      { icon: '🌐', title: 'Work on portfolio site', pct: 80, deadline: '2026-06-28', category: 'weekly', status: 'active', completedDate: null, failedDate: null },
+      { icon: '☸️', title: 'Pass KCNA certification', pct: 30, deadline: '2026-07-31', category: 'monthly', status: 'active', completedDate: null, failedDate: null },
+      { icon: '📚', title: 'Read 2 books', pct: 50, deadline: '2026-07-31', category: 'monthly', status: 'active', completedDate: null, failedDate: null },
+      { icon: '💰', title: 'Save target amount', pct: 40, deadline: '2026-07-31', category: 'monthly', status: 'active', completedDate: null, failedDate: null },
+      { icon: '☸️', title: 'Pass all 5 K8s certs (KCNA→CKS)', pct: 20, deadline: '2026-12-31', category: 'yearly', status: 'active', completedDate: null, failedDate: null },
+      { icon: '📚', title: 'Read 12 books', pct: 42, deadline: '2026-12-31', category: 'yearly', status: 'active', completedDate: null, failedDate: null },
+      { icon: '🗣️', title: 'Give 3 public talks', pct: 15, deadline: '2026-12-31', category: 'yearly', status: 'active', completedDate: null, failedDate: null },
+      { icon: '💪', title: 'Build consistent fitness routine', pct: 55, deadline: '2026-12-31', category: 'yearly', status: 'active', completedDate: null, failedDate: null },
     ];
+
+    let activeGoalCat = 'daily';
 
     const skills = {
       technical: [
@@ -2532,6 +2585,7 @@
       setTimeout(() => observeReveal(), 50);
       if (pg === 'growth') setTimeout(initGrowthCharts, 100);
       if (pg === 'skills') setTimeout(initSkillCharts, 100);
+      if (pg === 'goals') setTimeout(renderGoals, 50);
     }
 
     // ─── REVEAL ON SCROLL ───────────────────
@@ -2557,11 +2611,12 @@
       ids.forEach((id, i) => {
         const img = document.getElementById(id);
         const ph = document.getElementById(phs[i]);
-        if (img) { img.src = src; img.style.display = ''; } if (ph) ph.style.display = 'none';
+        if (img) { img.src = src; img.style.display = 'block'; }
+        if (ph) ph.style.display = 'none';
       });
       const navP = document.getElementById('nav-photo');
       const navI = document.getElementById('nav-init');
-      if (navP) { navP.src = src; navP.style.display = ''; }
+      if (navP) { navP.src = src; navP.style.display = 'block'; }
       if (navI) navI.style.display = 'none';
     }
 
@@ -2774,30 +2829,165 @@
     }
 
     // ─── GOALS ──────────────────────────────
+    function switchGoalTab(cat, el) {
+      activeGoalCat = cat;
+      document.querySelectorAll('.gtab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      renderGoals();
+    }
+
+    function isOverdue(deadline) {
+      if (!deadline) return false;
+      return new Date(deadline) < new Date(new Date().toDateString());
+    }
+
     function renderGoals() {
       const list = document.getElementById('goals-list'); if (!list) return;
       list.innerHTML = '';
-      goals.forEach((g, i) => {
-        const d = document.createElement('div'); d.className = 'goal-card glass';
-        d.innerHTML = `<div class="g-icon">${g.icon}</div>
-      <div class="g-content">
-        <div class="g-title" contenteditable="true" onblur="goals[${i}].title=this.textContent;saveGoals()">${g.title}</div>
-        <div class="g-bar-track"><div class="g-bar-fill" style="width:${g.pct}%"></div></div>
-        <div class="g-meta"><span class="g-pct">${g.pct}%</span><span class="g-date">📅 ${g.deadline}</span></div>
-      </div>
-      <div class="g-ctrl">
-        <button class="g-btn g-btn-p" onclick="chPct(${i},10)">+10%</button>
-        <button class="g-btn g-btn-m" onclick="chPct(${i},-10)">-10%</button>
-      </div>`;
+      const active = goals.filter((g, i) => g.category === activeGoalCat && g.status === 'active');
+
+      // update tab counts
+      ['daily','weekly','monthly','yearly'].forEach(cat => {
+        const el = document.getElementById('cnt-' + cat);
+        if (el) el.textContent = goals.filter(g => g.category === cat && g.status === 'active').length;
+      });
+
+      if (active.length === 0) {
+        list.innerHTML = `<div style="text-align:center;padding:32px;color:var(--txt3);font-size:0.9rem">No ${activeGoalCat} goals yet. Add one below!</div>`;
+      }
+
+      active.forEach((g) => {
+        const i = goals.indexOf(g);
+        const overdue = isOverdue(g.deadline);
+        const cls = overdue ? 'goal-card glass overdue' : 'goal-card glass';
+        const badge = overdue ? `<span class="g-badge overdue-badge">⏰ Overdue</span>` : '';
+        const deadlineStr = g.deadline ? new Date(g.deadline + 'T00:00:00').toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) : '';
+        const d = document.createElement('div');
+        d.className = cls;
+        d.innerHTML = `
+          ${badge}
+          <div class="g-icon">${g.icon}</div>
+          <div class="g-content">
+            <div class="g-title" contenteditable="true" onblur="goals[${i}].title=this.textContent;saveGoals()">${g.title}</div>
+            <div class="g-bar-track"><div class="g-bar-fill" style="width:${g.pct}%"></div></div>
+            <div class="g-meta">
+              <span class="g-pct">${g.pct}%</span>
+              <span class="g-date">📅 ${deadlineStr}</span>
+            </div>
+          </div>
+          <div class="g-ctrl">
+            <button class="g-btn g-btn-p" onclick="chPct(${i},10)">+10%</button>
+            <button class="g-btn g-btn-m" onclick="chPct(${i},-10)">−10%</button>
+            <button class="g-btn g-btn-done" title="Mark complete" onclick="markComplete(${i})">✅</button>
+            <button class="g-btn g-btn-fail" title="Mark failed" onclick="markFailed(${i})">❌</button>
+          </div>`;
         list.appendChild(d);
       });
+
+      renderArchive();
     }
-    function chPct(i, d) { goals[i].pct = Math.min(100, Math.max(0, goals[i].pct + d)); saveGoals(); renderGoals(); }
-    function addGoal() {
-      const icons = ['🎯', '⭐', '🔥', '💡', '📖', '🏃', '🌱', '💰', '☁️', '🧠'];
-      goals.push({ icon: icons[Math.floor(Math.random() * icons.length)], title: 'New Goal — click to edit', pct: 0, deadline: 'Dec 2026' });
+
+    function chPct(i, d) {
+      goals[i].pct = Math.min(100, Math.max(0, goals[i].pct + d));
+      if (goals[i].pct === 100) {
+        if (confirm(`"${goals[i].title}" is at 100%! Mark it as completed? 🎉`)) { markComplete(i); return; }
+      }
       saveGoals(); renderGoals();
     }
+
+    function markComplete(i) {
+      goals[i].status = 'completed';
+      goals[i].pct = 100;
+      goals[i].completedDate = new Date().toISOString().split('T')[0];
+      saveGoals(); renderGoals();
+    }
+
+    function markFailed(i) {
+      if (!confirm(`Mark "${goals[i].title}" as failed/missed?`)) return;
+      goals[i].status = 'failed';
+      goals[i].failedDate = new Date().toISOString().split('T')[0];
+      saveGoals(); renderGoals();
+    }
+
+    function undoGoal(i) {
+      goals[i].status = 'active';
+      goals[i].completedDate = null;
+      goals[i].failedDate = null;
+      saveGoals(); renderGoals();
+    }
+
+    function renderArchive() {
+      const doneEl = document.getElementById('completed-archive');
+      const failEl = document.getElementById('failed-archive');
+      const cntDone = document.getElementById('cnt-done');
+      const cntFail = document.getElementById('cnt-fail');
+
+      const completed = goals.filter(g => g.status === 'completed');
+      const failed = goals.filter(g => g.status === 'failed');
+
+      if (cntDone) cntDone.textContent = completed.length;
+      if (cntFail) cntFail.textContent = failed.length;
+
+      if (doneEl) {
+        doneEl.innerHTML = completed.length === 0
+          ? '<div style="padding:16px 20px;color:var(--txt3);font-size:0.85rem">No completed goals yet. Keep pushing! 💪</div>'
+          : completed.map((g) => {
+            const i = goals.indexOf(g);
+            return `<div class="goal-card glass done" style="margin-bottom:10px">
+              <span class="g-badge done-badge">✅ Done ${g.completedDate || ''}</span>
+              <div class="g-icon">${g.icon}</div>
+              <div class="g-content">
+                <div class="g-title" style="text-decoration:line-through;color:var(--txt3)">${g.title}</div>
+                <div class="g-meta"><span class="g-pct">100%</span><span class="g-date" style="color:var(--g1)">Completed!</span></div>
+              </div>
+              <div class="g-ctrl"><button class="g-btn g-btn-undo" onclick="undoGoal(${i})">↩ Undo</button></div>
+            </div>`;
+          }).join('');
+      }
+
+      if (failEl) {
+        failEl.innerHTML = failed.length === 0
+          ? '<div style="padding:16px 20px;color:var(--txt3);font-size:0.85rem">No missed goals. Stay consistent! 🔥</div>'
+          : failed.map((g) => {
+            const i = goals.indexOf(g);
+            return `<div class="goal-card glass failed" style="margin-bottom:10px">
+              <span class="g-badge fail-badge">❌ Missed ${g.failedDate || ''}</span>
+              <div class="g-icon">${g.icon}</div>
+              <div class="g-content">
+                <div class="g-title">${g.title}</div>
+                <div class="g-meta"><span class="g-pct">${g.pct}%</span><span class="g-date" style="color:#ef4444">Not achieved</span></div>
+              </div>
+              <div class="g-ctrl"><button class="g-btn g-btn-undo" onclick="undoGoal(${i})">↩ Retry</button></div>
+            </div>`;
+          }).join('');
+      }
+    }
+
+    function toggleArchive(bodyId, arrowId) {
+      const body = document.getElementById(bodyId);
+      const arrow = document.getElementById(arrowId);
+      if (!body) return;
+      body.classList.toggle('open');
+      if (arrow) arrow.textContent = body.classList.contains('open') ? '▲' : '▼';
+    }
+
+    function addGoal() {
+      const icons = ['🎯','⭐','🔥','💡','📖','🏃','🌱','💰','☁️','🧠','🏋️','✍️','🗣️','🌐','💻','⚡'];
+      const today = new Date();
+      const deadlineDefaults = { daily: today.toISOString().split('T')[0], weekly: new Date(today.setDate(today.getDate() + 7)).toISOString().split('T')[0], monthly: new Date(new Date().getFullYear(), new Date().getMonth()+1, 0).toISOString().split('T')[0], yearly: `${new Date().getFullYear()}-12-31` };
+      goals.push({
+        icon: icons[Math.floor(Math.random() * icons.length)],
+        title: 'New Goal — click to edit',
+        pct: 0,
+        deadline: deadlineDefaults[activeGoalCat] || '2026-12-31',
+        category: activeGoalCat,
+        status: 'active',
+        completedDate: null,
+        failedDate: null
+      });
+      saveGoals(); renderGoals();
+    }
+
     function saveGoals() { localStorage.setItem(GK, JSON.stringify(goals)); }
 
     // ─── QUOTES ─────────────────────────────
@@ -2839,7 +3029,8 @@
       document.documentElement.setAttribute('data-theme', t);
       document.getElementById('themeBtn').textContent = t === 'dark' ? '☀️ Light' : '🌑 Dark';
       // Photo
-      const ph = localStorage.getItem(PK); if (ph) applyPhoto(ph);
+      const ph = localStorage.getItem(PK) || localStorage.getItem('stepup_photo');
+      if (ph) { localStorage.setItem(PK, ph); applyPhoto(ph); }
       // Render
       renderHabits(); renderGoals(); updateHeroStats(); renderQuotes();
       // Reveal
