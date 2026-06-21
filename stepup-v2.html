@@ -1,0 +1,2851 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MR Sisodiya · Step-Up Portfolio</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    /* ════════════════════════════════════════
+   TOKENS & THEME
+════════════════════════════════════════ */
+    :root {
+      --p1: #8b5cf6;
+      --p2: #a78bfa;
+      --p3: #c4b5fd;
+      --g1: #10b981;
+      --g2: #34d399;
+      --pk: #ec4899;
+      --or: #f59e0b;
+      --bl: #3b82f6;
+      --rd: #ef4444;
+      --tr: 0.35s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    [data-theme="dark"] {
+      --bg: #06060f;
+      --bg2: #0d0d1a;
+      --bg3: #13132b;
+      --bg4: #1a1a38;
+      --glass: rgba(255, 255, 255, 0.04);
+      --glass-b: rgba(255, 255, 255, 0.08);
+      --border: rgba(139, 92, 246, 0.18);
+      --border2: rgba(255, 255, 255, 0.07);
+      --txt: #f0f0fa;
+      --txt2: #b0aed4;
+      --txt3: #5c5a8a;
+      --nav: rgba(6, 6, 15, 0.85);
+      --shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    [data-theme="light"] {
+      --bg: #f8f7ff;
+      --bg2: #fff;
+      --bg3: #f0eeff;
+      --bg4: #e8e5ff;
+      --glass: rgba(255, 255, 255, 0.7);
+      --glass-b: rgba(255, 255, 255, 0.9);
+      --border: rgba(139, 92, 246, 0.25);
+      --border2: rgba(0, 0, 0, 0.06);
+      --txt: #120f2d;
+      --txt2: #3d3a6b;
+      --txt3: #9997c5;
+      --nav: rgba(248, 247, 255, 0.9);
+      --shadow: 0 8px 40px rgba(100, 80, 200, 0.12);
+    }
+
+    /* ════════════════════════════════════════
+   RESET
+════════════════════════════════════════ */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--txt);
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background var(--tr), color var(--tr)
+    }
+
+    button {
+      cursor: pointer;
+      font-family: inherit;
+      border: none
+    }
+
+    a {
+      color: var(--p2);
+      text-decoration: none
+    }
+
+    [contenteditable] {
+      outline: none;
+      border-radius: 4px;
+      transition: background 0.2s
+    }
+
+    [contenteditable]:hover {
+      background: rgba(139, 92, 246, 0.07)
+    }
+
+    [contenteditable]:focus {
+      background: rgba(139, 92, 246, 0.12)
+    }
+
+    #photo-input {
+      display: none
+    }
+
+    /* ════════════════════════════════════════
+   ANIMATED BACKGROUND
+════════════════════════════════════════ */
+    .bg-orbs {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.12;
+      animation: orbFloat 18s ease-in-out infinite
+    }
+
+    [data-theme="light"] .orb {
+      opacity: 0.07
+    }
+
+    .orb1 {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--p1), transparent);
+      top: -200px;
+      left: -200px;
+      animation-delay: 0s
+    }
+
+    .orb2 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--pk), transparent);
+      bottom: -150px;
+      right: -150px;
+      animation-delay: -6s
+    }
+
+    .orb3 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, var(--bl), transparent);
+      top: 40%;
+      left: 60%;
+      animation-delay: -12s
+    }
+
+    @keyframes orbFloat {
+
+      0%,
+      100% {
+        transform: translate(0, 0) scale(1)
+      }
+
+      33% {
+        transform: translate(40px, -30px) scale(1.05)
+      }
+
+      66% {
+        transform: translate(-20px, 40px) scale(0.97)
+      }
+    }
+
+    /* ════════════════════════════════════════
+   NAV
+════════════════════════════════════════ */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: var(--nav);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 64px;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--p2), var(--pk));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 1px;
+    }
+
+    .nav-orb {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--p1), var(--pk));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2px;
+      background: var(--glass);
+      border: 1px solid var(--border2);
+      border-radius: 40px;
+      padding: 4px
+    }
+
+    .nav-link {
+      padding: 6px 18px;
+      border-radius: 30px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--txt3);
+      transition: all var(--tr);
+      border: none;
+      background: none;
+      letter-spacing: 0.3px;
+    }
+
+    .nav-link:hover {
+      color: var(--txt2)
+    }
+
+    .nav-link.active {
+      background: linear-gradient(135deg, var(--p1), #7c3aed);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(139, 92, 246, 0.35)
+    }
+
+    .nav-r {
+      display: flex;
+      gap: 10px;
+      align-items: center
+    }
+
+    .theme-btn {
+      background: var(--glass);
+      border: 1px solid var(--border2);
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 0.78rem;
+      color: var(--txt2);
+      transition: all 0.2s;
+    }
+
+    .theme-btn:hover {
+      border-color: var(--p2);
+      color: var(--p2)
+    }
+
+    .photo-nav-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--p1), var(--pk));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .photo-nav-btn img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%
+    }
+
+    /* ════════════════════════════════════════
+   PAGE SYSTEM
+════════════════════════════════════════ */
+    .page {
+      display: none;
+      padding-top: 64px;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1
+    }
+
+    .page.active {
+      display: block;
+      animation: pageIn 0.5s cubic-bezier(.4, 0, .2, 1)
+    }
+
+    @keyframes pageIn {
+      from {
+        opacity: 0;
+        transform: translateY(24px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .container {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 60px 28px
+    }
+
+    .section-eyebrow {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--p2);
+      margin-bottom: 12px
+    }
+
+    .section-h {
+      font-size: 2.4rem;
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 10px
+    }
+
+    .grad-text {
+      background: linear-gradient(135deg, var(--p2) 20%, var(--pk));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .section-sub {
+      color: var(--txt3);
+      font-size: 0.92rem;
+      line-height: 1.6;
+      margin-bottom: 48px
+    }
+
+    /* ════════════════════════════════════════
+   GLASS CARDS
+════════════════════════════════════════ */
+    .glass {
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border2);
+      border-radius: 20px;
+      transition: border-color var(--tr), box-shadow var(--tr), transform var(--tr);
+    }
+
+    .glass:hover {
+      border-color: var(--border);
+      box-shadow: var(--shadow)
+    }
+
+    .glass-glow:hover {
+      box-shadow: 0 0 0 1px var(--p1), 0 8px 32px rgba(139, 92, 246, 0.2)
+    }
+
+    .card-pad {
+      padding: 28px
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px
+    }
+
+    .grid3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px
+    }
+
+    /* ════════════════════════════════════════
+   REVEAL ANIMATIONS
+════════════════════════════════════════ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.65s ease, transform 0.65s ease
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    .reveal-l {
+      opacity: 0;
+      transform: translateX(-32px);
+      transition: opacity 0.6s ease, transform 0.6s ease
+    }
+
+    .reveal-l.visible {
+      opacity: 1;
+      transform: translateX(0)
+    }
+
+    .reveal-r {
+      opacity: 0;
+      transform: translateX(32px);
+      transition: opacity 0.6s ease, transform 0.6s ease
+    }
+
+    .reveal-r.visible {
+      opacity: 1;
+      transform: translateX(0)
+    }
+
+    .d1 {
+      transition-delay: 0.1s
+    }
+
+    .d2 {
+      transition-delay: 0.2s
+    }
+
+    .d3 {
+      transition-delay: 0.3s
+    }
+
+    .d4 {
+      transition-delay: 0.4s
+    }
+
+    .d5 {
+      transition-delay: 0.5s
+    }
+
+    /* ════════════════════════════════════════
+   HOME / HERO
+════════════════════════════════════════ */
+    .hero {
+      min-height: calc(100vh - 64px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 24px;
+      position: relative;
+    }
+
+    .hero-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .avatar-ring {
+      position: relative;
+      margin-bottom: 32px;
+      display: inline-block;
+    }
+
+    .avatar-ring::before {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border-radius: 50%;
+      background: conic-gradient(var(--p1), var(--pk), var(--p2), var(--p1));
+      animation: spinRing 4s linear infinite;
+      z-index: -1;
+      filter: blur(3px);
+    }
+
+    @keyframes spinRing {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    .avatar-ring::after {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      background: var(--bg);
+      z-index: -1;
+    }
+
+    .avatar-img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: top;
+      display: none;
+      border: 3px solid var(--bg);
+      position: relative;
+      z-index: 1;
+    }
+
+    .avatar-placeholder {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--p1), var(--pk));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: #fff;
+      position: relative;
+      z-index: 1;
+      cursor: pointer;
+    }
+
+    .upload-overlay {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      z-index: 10;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--p1);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      border: 2px solid var(--bg);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .upload-overlay:hover {
+      transform: scale(1.1)
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: var(--g1);
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 24px;
+    }
+
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--g1);
+      animation: pulseD 2s infinite
+    }
+
+    @keyframes pulseD {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1)
+      }
+
+      50% {
+        opacity: 0.4;
+        transform: scale(1.5)
+      }
+    }
+
+    .hero-name {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .hero-role {
+      font-size: 1.1rem;
+      color: var(--p2);
+      font-weight: 600;
+      margin-bottom: 20px;
+      letter-spacing: 0.3px;
+    }
+
+    .hero-bio {
+      font-size: 1rem;
+      color: var(--txt2);
+      max-width: 540px;
+      line-height: 1.75;
+      margin: 0 auto 44px;
+    }
+
+    .stats-strip {
+      display: flex;
+      gap: 3px;
+      background: var(--glass);
+      border: 1px solid var(--border2);
+      border-radius: 20px;
+      padding: 6px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .stat-pill {
+      padding: 12px 24px;
+      border-radius: 14px;
+      text-align: center;
+      min-width: 120px;
+      transition: background 0.2s;
+    }
+
+    .stat-pill:hover {
+      background: var(--glass-b)
+    }
+
+    .stat-n {
+      font-size: 1.7rem;
+      font-weight: 900;
+      color: var(--p2);
+      line-height: 1
+    }
+
+    .stat-l {
+      font-size: 0.62rem;
+      color: var(--txt3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center
+    }
+
+    .btn-grad {
+      background: linear-gradient(135deg, var(--p1), #7c3aed);
+      color: #fff;
+      padding: 13px 30px;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      box-shadow: 0 4px 24px rgba(139, 92, 246, 0.35);
+      transition: all 0.2s;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-grad:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(139, 92, 246, 0.5)
+    }
+
+    .btn-ghost {
+      background: var(--glass);
+      border: 1px solid var(--border2);
+      color: var(--txt);
+      padding: 13px 30px;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--p2);
+      transform: translateY(-2px)
+    }
+
+    /* scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: var(--txt3);
+      font-size: 0.68rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      animation: bounce 2.5s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateX(-50%) translateY(0)
+      }
+
+      50% {
+        transform: translateX(-50%) translateY(8px)
+      }
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--p2), transparent)
+    }
+
+    /* ════════════════════════════════════════
+   ABOUT
+════════════════════════════════════════ */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 40px;
+      align-items: start
+    }
+
+    .about-photo-frame {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+      background: linear-gradient(135deg, var(--p1), var(--pk));
+    }
+
+    .about-photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      display: none
+    }
+
+    .about-photo-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+    }
+
+    .about-photo-frame::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(6, 6, 15, 0.6) 0%, transparent 40%);
+      pointer-events: none;
+    }
+
+    .about-frame-label {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      z-index: 2;
+      background: rgba(6, 6, 15, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      padding: 10px 16px;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px
+    }
+
+    .chip {
+      background: var(--glass);
+      border: 1px solid var(--border2);
+      border-radius: 30px;
+      padding: 5px 14px;
+      font-size: 0.72rem;
+      color: var(--txt2);
+      font-weight: 600;
+      transition: border-color 0.2s;
+    }
+
+    .chip:hover {
+      border-color: var(--p2);
+      color: var(--p2)
+    }
+
+    .bio-text {
+      font-size: 0.95rem;
+      color: var(--txt2);
+      line-height: 1.85;
+      margin-bottom: 24px
+    }
+
+    .values-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px
+    }
+
+    .value-card {
+      background: var(--glass);
+      border: 1px solid var(--border2);
+      border-radius: 16px;
+      padding: 18px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .value-card:hover {
+      border-color: var(--border);
+      transform: translateY(-2px)
+    }
+
+    .v-icon {
+      font-size: 1.5rem;
+      margin-bottom: 10px
+    }
+
+    .v-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--txt);
+      margin-bottom: 4px
+    }
+
+    .v-desc {
+      font-size: 0.72rem;
+      color: var(--txt3);
+      line-height: 1.5
+    }
+
+    /* ════════════════════════════════════════
+   EDUCATION
+════════════════════════════════════════ */
+    .edu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 36px
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 12px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--p1), var(--pk), transparent)
+    }
+
+    .tl-item {
+      position: relative;
+      margin-bottom: 36px
+    }
+
+    .tl-dot {
+      position: absolute;
+      left: -30px;
+      top: 6px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--p1), var(--pk));
+      border: 3px solid var(--bg);
+      box-shadow: 0 0 12px rgba(139, 92, 246, 0.5);
+    }
+
+    .tl-year {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--p2);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px
+    }
+
+    .tl-title {
+      font-size: 1.02rem;
+      font-weight: 800;
+      color: var(--txt);
+      margin-bottom: 4px
+    }
+
+    .tl-sub {
+      font-size: 0.8rem;
+      color: var(--txt3);
+      margin-bottom: 10px
+    }
+
+    .tl-desc {
+      font-size: 0.82rem;
+      color: var(--txt2);
+      line-height: 1.65
+    }
+
+    .cert-badge {
+      background: var(--glass);
+      border: 1px solid var(--border2);
+      border-radius: 14px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: border-color 0.2s, transform 0.2s;
+      margin-bottom: 12px;
+    }
+
+    .cert-badge:hover {
+      transform: translateY(-2px);
+      border-color: var(--border)
+    }
+
+    .cert-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0
+    }
+
+    .cert-name {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--txt)
+    }
+
+    .cert-org {
+      font-size: 0.7rem;
+      color: var(--txt3);
+      margin-top: 2px
+    }
+
+    .cert-status {
+      margin-left: auto;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .status-pending {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: var(--or)
+    }
+
+    .status-done {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--g1)
+    }
+
+    .status-wip {
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: var(--bl)
+    }
+
+    .k8s-banner {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.08));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .k8s-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--p2);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 14px
+    }
+
+    /* ════════════════════════════════════════
+   GROWTH PAGE — STAR OF THE SHOW
+════════════════════════════════════════ */
+    .growth-hero {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(236, 72, 153, 0.06));
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 48px;
+      margin-bottom: 32px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .growth-hero-left {}
+
+    .growth-eyebrow {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--g1);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .growth-h {
+      font-size: 2.8rem;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 16px
+    }
+
+    .growth-sub {
+      font-size: 0.95rem;
+      color: var(--txt2);
+      line-height: 1.7;
+      max-width: 480px;
+      margin-bottom: 28px
+    }
+
+    .mini-stats {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap
+    }
+
+    .mini-stat .n {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--p2)
+    }
+
+    .mini-stat .l {
+      font-size: 0.68rem;
+      color: var(--txt3);
+      text-transform: uppercase;
+      letter-spacing: 1px
+    }
+
+    /* SVG Growth Illustration */
+    .growth-svg-wrap {
+      flex-shrink: 0;
+      width: 280px
+    }
+
+    .growth-svg-wrap svg {
+      width: 100%;
+      height: auto
+    }
+
+    /* Day counter ring */
+    .day-ring-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--glass);
+      border: 1px solid var(--border2);
+      border-radius: 24px;
+      padding: 32px 24px;
+    }
+
+    .ring-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .ring-inner {
+      position: absolute;
+      text-align: center
+    }
+
+    .ring-num {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--p2);
+      line-height: 1
+    }
+
+    .ring-label-sm {
+      font-size: 0.62rem;
+      color: var(--txt3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px
+    }
+
+    /* Habit tracker enhanced */
+    .habit-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px
+    }
+
+    .habit-toolbar {
+      display: flex;
+      gap: 8px
+    }
+
+    .hbtn {
+      border-radius: 10px;
+      padding: 7px 16px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border: 1px solid var(--border2);
+      background: var(--glass);
+      color: var(--txt2);
+      transition: all 0.2s;
+    }
+
+    .hbtn:hover {
+      border-color: var(--p2);
+      color: var(--p2)
+    }
+
+    .hbtn.green-btn {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.3);
+      color: var(--g1)
+    }
+
+    .habits-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 20px
+    }
+
+    .habit-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--glass);
+      border: 1px solid var(--border2);
+      border-radius: 14px;
+      padding: 13px 16px;
+      cursor: pointer;
+      transition: all 0.25s;
+      user-select: none;
+    }
+
+    .habit-card:hover {
+      border-color: var(--border);
+      transform: translateX(3px)
+    }
+
+    .habit-card.done {
+      border-color: rgba(16, 185, 129, 0.35);
+      background: rgba(16, 185, 129, 0.06)
+    }
+
+    .habit-card.done:hover {
+      transform: translateX(0)
+    }
+
+    .h-check {
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      border: 2px solid var(--border2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+    }
+
+    .habit-card.done .h-check {
+      background: var(--g1);
+      border-color: var(--g1);
+      color: #fff;
+      animation: checkPop 0.3s cubic-bezier(.4, 0, .2, 1)
+    }
+
+    @keyframes checkPop {
+      0% {
+        transform: scale(0.5)
+      }
+
+      60% {
+        transform: scale(1.2)
+      }
+
+      100% {
+        transform: scale(1)
+      }
+    }
+
+    .h-name {
+      font-size: 0.82rem;
+      color: var(--txt2);
+      font-weight: 500;
+      flex: 1
+    }
+
+    .habit-card.done .h-name {
+      color: var(--txt)
+    }
+
+    .h-streak {
+      font-size: 0.72rem;
+      color: var(--or);
+      font-weight: 700
+    }
+
+    .add-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px
+    }
+
+    .h-input {
+      flex: 1;
+      background: var(--glass);
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      padding: 11px 16px;
+      font-size: 0.83rem;
+      color: var(--txt);
+      outline: none;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    .h-input:focus {
+      border-color: var(--p2)
+    }
+
+    .h-add {
+      background: linear-gradient(135deg, var(--p1), #7c3aed);
+      color: #fff;
+      border-radius: 12px;
+      padding: 11px 20px;
+      font-size: 0.83rem;
+      font-weight: 700
+    }
+
+    /* Growth mindset cards */
+    .mindset-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 32px
+    }
+
+    .mindset-card {
+      background: var(--glass);
+      border: 1px solid var(--border2);
+      border-radius: 20px;
+      padding: 24px 20px;
+      text-align: center;
+      transition: all var(--tr);
+    }
+
+    .mindset-card:hover {
+      border-color: var(--border);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(139, 92, 246, 0.15)
+    }
+
+    .m-svg {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 16px
+    }
+
+    .m-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--txt);
+      margin-bottom: 8px
+    }
+
+    .m-desc {
+      font-size: 0.75rem;
+      color: var(--txt3);
+      line-height: 1.6
+    }
+
+    /* Quote rotator */
+    .quote-section {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(236, 72, 153, 0.06));
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      text-align: center;
+      margin-top: 28px;
+    }
+
+    .quote-text {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--txt);
+      line-height: 1.7;
+      font-style: italic;
+      margin-bottom: 12px;
+      min-height: 60px
+    }
+
+    .quote-author {
+      font-size: 0.75rem;
+      color: var(--p2);
+      font-weight: 700;
+      letter-spacing: 0.5px
+    }
+
+    .quote-dots {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 16px
+    }
+
+    .qdot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border2);
+      cursor: pointer;
+      transition: all 0.2s
+    }
+
+    .qdot.active {
+      background: var(--p2);
+      width: 20px;
+      border-radius: 3px
+    }
+
+    /* ════════════════════════════════════════
+   SKILLS
+════════════════════════════════════════ */
+    .skill-tabs-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+      background: var(--glass);
+      border: 1px solid var(--border2);
+      border-radius: 16px;
+      padding: 6px
+    }
+
+    .stab {
+      padding: 8px 18px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--txt3);
+      transition: all 0.2s;
+      border: none;
+      background: none;
+    }
+
+    .stab.active {
+      background: linear-gradient(135deg, var(--p1), #7c3aed);
+      color: #fff
+    }
+
+    .stab:hover:not(.active) {
+      color: var(--txt2);
+      background: var(--glass-b)
+    }
+
+    .skill-panel {
+      display: none
+    }
+
+    .skill-panel.active {
+      display: block;
+      animation: pageIn 0.3s ease
+    }
+
+    .sbar {
+      margin-bottom: 20px
+    }
+
+    .sbar-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px
+    }
+
+    .s-name {
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--txt)
+    }
+
+    .s-pct {
+      font-size: 0.8rem;
+      color: var(--p2);
+      font-weight: 700
+    }
+
+    .sbar-track {
+      height: 10px;
+      background: var(--bg3);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border2)
+    }
+
+    .sbar-fill {
+      height: 100%;
+      border-radius: 10px;
+      width: 0;
+      transition: width 1.2s cubic-bezier(.4, 0, .2, 1)
+    }
+
+    .fill-tech {
+      background: linear-gradient(90deg, var(--p1), var(--p2))
+    }
+
+    .fill-cloud {
+      background: linear-gradient(90deg, var(--bl), #60a5fa)
+    }
+
+    .fill-mental {
+      background: linear-gradient(90deg, var(--pk), #f472b6)
+    }
+
+    .fill-ps {
+      background: linear-gradient(90deg, var(--g1), var(--g2))
+    }
+
+    .fill-biz {
+      background: linear-gradient(90deg, var(--or), #fbbf24)
+    }
+
+    .fill-phys {
+      background: linear-gradient(90deg, #ef4444, #f87171)
+    }
+
+    .skills-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: start
+    }
+
+    .radar-wrap {
+      position: relative;
+      height: 340px
+    }
+
+    /* ════════════════════════════════════════
+   GOALS
+════════════════════════════════════════ */
+    .goal-card {
+      background: var(--glass);
+      border: 1px solid var(--border2);
+      border-radius: 18px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 12px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .goal-card:hover {
+      border-color: var(--border);
+      transform: translateX(4px)
+    }
+
+    .g-icon {
+      font-size: 1.8rem;
+      flex-shrink: 0
+    }
+
+    .g-content {
+      flex: 1
+    }
+
+    .g-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--txt);
+      margin-bottom: 8px
+    }
+
+    .g-bar-track {
+      height: 8px;
+      background: var(--bg3);
+      border-radius: 8px;
+      overflow: hidden
+    }
+
+    .g-bar-fill {
+      height: 100%;
+      border-radius: 8px;
+      background: linear-gradient(90deg, var(--g1), var(--g2));
+      transition: width 1s ease
+    }
+
+    .g-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px
+    }
+
+    .g-pct {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--g1)
+    }
+
+    .g-date {
+      font-size: 0.7rem;
+      color: var(--txt3)
+    }
+
+    .g-ctrl {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex-shrink: 0
+    }
+
+    .g-btn {
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border: 1px solid;
+      transition: all 0.2s
+    }
+
+    .g-btn-p {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.3);
+      color: var(--g1)
+    }
+
+    .g-btn-m {
+      background: var(--glass);
+      border-color: var(--border2);
+      color: var(--txt3)
+    }
+
+    .vision-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 14px
+    }
+
+    .vision-card {
+      background: var(--glass);
+      border: 1px solid var(--border2);
+      border-radius: 16px;
+      padding: 20px
+    }
+
+    .v-cat {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--txt3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px
+    }
+
+    /* affirmation */
+    .affirm-card {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .affirm-text {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--txt);
+      line-height: 1.7;
+      font-style: italic;
+      margin-bottom: 14px
+    }
+
+    .affirm-by {
+      font-size: 0.72rem;
+      color: var(--p2);
+      font-weight: 700
+    }
+
+    .affirm-next {
+      margin-top: 16px;
+      background: rgba(139, 92, 246, 0.12);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      color: var(--p2);
+      border-radius: 20px;
+      padding: 6px 18px;
+      font-size: 0.75rem;
+      font-weight: 700
+    }
+
+    /* tags */
+    .tag {
+      display: inline-block;
+      background: rgba(139, 92, 246, 0.12);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      color: var(--p2);
+      font-size: 0.65rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      margin: 2px
+    }
+
+    /* charts */
+    .chart-wrap {
+      position: relative;
+      height: 220px
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border2);
+      margin: 32px 0
+    }
+
+    /* responsive */
+    @media(max-width:900px) {
+
+      .about-grid,
+      .edu-grid,
+      .skills-layout,
+      .grid2 {
+        grid-template-columns: 1fr
+      }
+
+      .growth-hero {
+        grid-template-columns: 1fr
+      }
+
+      .growth-svg-wrap {
+        display: none
+      }
+
+      .mindset-grid {
+        grid-template-columns: 1fr 1fr
+      }
+
+      .habits-grid {
+        grid-template-columns: 1fr
+      }
+
+      nav {
+        padding: 0 20px
+      }
+
+      .nav-links {
+        display: none
+      }
+    }
+
+    @media(max-width:600px) {
+
+      .mindset-grid,
+      .grid3 {
+        grid-template-columns: 1fr
+      }
+
+      .container {
+        padding: 40px 16px
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- AMBIENT BACKGROUND -->
+  <div class="bg-orbs">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-brand">
+      <div class="nav-orb">⚡</div>
+      STEP-UP
+    </div>
+    <div class="nav-links">
+      <button class="nav-link active" onclick="goTo('home')">Home</button>
+      <button class="nav-link" onclick="goTo('about')">About</button>
+      <button class="nav-link" onclick="goTo('education')">Education</button>
+      <button class="nav-link" onclick="goTo('growth')">Growth</button>
+      <button class="nav-link" onclick="goTo('skills')">Skills</button>
+      <button class="nav-link" onclick="goTo('goals')">Goals</button>
+    </div>
+    <div class="nav-r">
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">☀️ Light</button>
+      <div class="photo-nav-btn" onclick="document.getElementById('photo-input').click()" title="Upload photo">
+        <img id="nav-photo" src="" alt="" style="display:none">
+        <span id="nav-init">M</span>
+      </div>
+    </div>
+  </nav>
+  <input type="file" id="photo-input" accept="image/*" onchange="uploadPhoto(event)">
+
+  <!-- ══════════════════════════════════
+     PAGE: HOME
+══════════════════════════════════ -->
+  <div class="page active" id="page-home">
+    <div class="hero">
+      <div class="hero-glow"></div>
+      <div class="avatar-ring reveal d1">
+        <img id="hero-img" class="avatar-img" src="" alt="MR Sisodiya">
+        <div class="avatar-placeholder" id="hero-ph" onclick="document.getElementById('photo-input').click()">M</div>
+        <div class="upload-overlay" onclick="document.getElementById('photo-input').click()">📷</div>
+      </div>
+      <div class="hero-badge reveal d2"><span class="pulse-dot"></span> Growing Every Day · June 2026</div>
+      <h1 class="hero-name reveal d2">
+        <span class="grad-text" contenteditable="true" spellcheck="false">MR Sisodiya</span>
+      </h1>
+      <p class="hero-role reveal d3" contenteditable="true" spellcheck="false">Cloud & DevOps Engineer · Daily Habit
+        Builder · Lifelong Learner</p>
+      <p class="hero-bio reveal d3" contenteditable="true" spellcheck="false">
+        Building systems for growth — in Kubernetes clusters and in life. Every habit is a deployment. Every day is a
+        release.
+      </p>
+      <div class="stats-strip reveal d4">
+        <div class="stat-pill">
+          <div class="stat-n" id="h-streak">🔥 0</div>
+          <div class="stat-l">Day Streak</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-n" id="h-today">0%</div>
+          <div class="stat-l">Today's Habits</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-n" id="h-count">16</div>
+          <div class="stat-l">Active Habits</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-n">12+</div>
+          <div class="stat-l">Skills Tracked</div>
+        </div>
+      </div>
+      <div class="hero-btns reveal d5">
+        <button class="btn-grad" onclick="goTo('growth')">View Growth Dashboard →</button>
+        <button class="btn-ghost" onclick="goTo('about')">About Me</button>
+      </div>
+      <div class="scroll-hint">
+        <div class="scroll-line"></div>
+        scroll
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+     PAGE: ABOUT
+══════════════════════════════════ -->
+  <div class="page" id="page-about">
+    <div class="container">
+      <div class="section-eyebrow reveal">WHO I AM</div>
+      <h2 class="section-h reveal d1">About <span class="grad-text">Me</span></h2>
+      <p class="section-sub reveal d2">Beyond the skills and certifications — this is the person behind the journey.</p>
+      <div class="about-grid">
+        <div class="reveal-l">
+          <div class="about-photo-frame">
+            <img id="about-img" src="" alt="">
+            <div class="about-photo-placeholder" id="about-ph">😊</div>
+            <div class="about-frame-label">
+              <div style="font-size:0.82rem;font-weight:700;color:#fff">MR Sisodiya</div>
+              <div style="font-size:0.68rem;color:rgba(255,255,255,0.6)">🏀 Lakers #24 Fan · Bangalore</div>
+            </div>
+          </div>
+          <div class="chip-row" style="margin-top:16px">
+            <span class="chip">🎯 Goal-Oriented</span>
+            <span class="chip">📚 Lifelong Learner</span>
+            <span class="chip">☁️ Cloud Native</span>
+            <span class="chip">🧘 Mindful</span>
+            <span class="chip">💪 Disciplined</span>
+            <span class="chip">🚀 Ambitious</span>
+          </div>
+        </div>
+        <div class="reveal-r">
+          <div class="glass card-pad" style="margin-bottom:20px">
+            <div class="section-eyebrow" style="margin-bottom:10px">MY STORY</div>
+            <p class="bio-text" contenteditable="true" spellcheck="false">
+              I believe growth is a system, not a wish. My journey is about building habits the same way I build
+              infrastructure — with intention, monitoring, and continuous improvement.
+            </p>
+            <p class="bio-text" contenteditable="true" spellcheck="false">
+              By day I work on cloud-native solutions at Novata in Bangalore. By discipline I track 16 daily habits,
+              study Kubernetes, and work toward becoming the most complete version of myself.
+            </p>
+            <p class="bio-text" contenteditable="true" spellcheck="false">
+              This website is my living proof-of-work. Not a resume — a reflection.
+            </p>
+          </div>
+          <div class="values-grid">
+            <div class="value-card glass-glow">
+              <div class="v-icon">🔥</div>
+              <div class="v-title" contenteditable="true">Consistency Over Perfection</div>
+              <div class="v-desc" contenteditable="true">Show up every day, even imperfectly</div>
+            </div>
+            <div class="value-card glass-glow">
+              <div class="v-icon">🧠</div>
+              <div class="v-title" contenteditable="true">Systems Thinking</div>
+              <div class="v-desc" contenteditable="true">Build processes that make success inevitable</div>
+            </div>
+            <div class="value-card glass-glow">
+              <div class="v-icon">☁️</div>
+              <div class="v-title" contenteditable="true">Cloud Native Mindset</div>
+              <div class="v-desc" contenteditable="true">Resilient, scalable, always monitored</div>
+            </div>
+            <div class="value-card glass-glow">
+              <div class="v-icon">📈</div>
+              <div class="v-title" contenteditable="true">1% Better Every Day</div>
+              <div class="v-desc" contenteditable="true">Compound growth: small daily wins × time</div>
+            </div>
+          </div>
+          <div class="glass card-pad" style="margin-top:20px">
+            <div class="section-eyebrow" style="margin-bottom:14px">FUN FACTS</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;gap:12px;align-items:center"><span style="font-size:1.2rem">🏀</span><span
+                  class="bio-text" contenteditable="true">Lakers fan — Kobe #24 is the blueprint</span></div>
+              <div style="display:flex;gap:12px;align-items:center"><span style="font-size:1.2rem">🌆</span><span
+                  class="bio-text" contenteditable="true">Based in Bangalore — Silicon Valley of India</span></div>
+              <div style="display:flex;gap:12px;align-items:center"><span style="font-size:1.2rem">☁️</span><span
+                  class="bio-text" contenteditable="true">Targeting all 5 Kubernetes certifications (KCNA → CKS)</span>
+              </div>
+              <div style="display:flex;gap:12px;align-items:center"><span style="font-size:1.2rem">⏰</span><span
+                  class="bio-text" contenteditable="true">Best ideas before 9am — mornings are sacred</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+     PAGE: EDUCATION
+══════════════════════════════════ -->
+  <div class="page" id="page-education">
+    <div class="container">
+      <div class="section-eyebrow reveal">LEARNING PATH</div>
+      <h2 class="section-h reveal d1">Education & <span class="grad-text">Certifications</span></h2>
+      <p class="section-sub reveal d2">Academic foundation + relentless self-directed learning.</p>
+      <div class="edu-grid">
+        <div class="reveal-l">
+          <div class="section-eyebrow" style="margin-bottom:20px">ACADEMIC TIMELINE</div>
+          <div class="timeline">
+            <div class="tl-item">
+              <div class="tl-dot"></div>
+              <div class="tl-year" contenteditable="true">2020 – 2024</div>
+              <div class="tl-title" contenteditable="true">Bachelor of Technology</div>
+              <div class="tl-sub" contenteditable="true">Computer Science · Add Your University</div>
+              <div class="tl-desc" contenteditable="true">Systems, networks, databases, and software engineering. Built
+                the analytical foundation for cloud-native work.</div>
+              <div style="margin-top:10px"><span class="tag">Computer Science</span><span class="tag">Engineering</span>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot"
+                style="background:linear-gradient(135deg,var(--pk),#f472b6);box-shadow:0 0 12px rgba(236,72,153,0.4)">
+              </div>
+              <div class="tl-year" contenteditable="true">2018 – 2020</div>
+              <div class="tl-title" contenteditable="true">Higher Secondary (12th)</div>
+              <div class="tl-sub" contenteditable="true">Science Stream · Add Your School</div>
+              <div class="tl-desc" contenteditable="true">Physics, Chemistry, Mathematics & Computer Science. Built
+                strong analytical and logical thinking.</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot"
+                style="background:linear-gradient(135deg,var(--or),#fbbf24);box-shadow:0 0 12px rgba(245,158,11,0.4)">
+              </div>
+              <div class="tl-year" contenteditable="true">Before 2018</div>
+              <div class="tl-title" contenteditable="true">Secondary Education (10th)</div>
+              <div class="tl-sub" contenteditable="true">Add Your School Name</div>
+              <div class="tl-desc" contenteditable="true">Strong academic foundation and love for learning.</div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="section-eyebrow" style="margin-bottom:16px">CURRENT COURSES</div>
+          <div class="cert-badge glass">
+            <div class="cert-icon">📚</div>
+            <div>
+              <div class="cert-name" contenteditable="true">Add Your Current Course</div>
+              <div class="cert-org" contenteditable="true">Platform Name · In Progress</div>
+            </div>
+            <div class="cert-status status-wip">In Progress</div>
+          </div>
+          <div class="cert-badge glass">
+            <div class="cert-icon">🏅</div>
+            <div>
+              <div class="cert-name" contenteditable="true">Add Completed Cert</div>
+              <div class="cert-org" contenteditable="true">Platform Name · 2024</div>
+            </div>
+            <div class="cert-status status-done">Completed ✓</div>
+          </div>
+        </div>
+        <div class="reveal-r">
+          <div class="k8s-banner">
+            <div class="k8s-title">🎯 KUBERNETES CERTIFICATION ROADMAP — CNCF</div>
+            <div style="font-size:0.78rem;color:var(--txt3);margin-bottom:16px">Targeting all 5 certifications in order
+              of difficulty</div>
+            <div class="cert-badge"
+              style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:12px;margin-bottom:8px">
+              <div class="cert-icon">🟡</div>
+              <div>
+                <div class="cert-name">KCNA — Kubernetes & Cloud Native Associate</div>
+                <div class="cert-org">CNCF · Foundation Level · Step 1</div>
+              </div>
+              <div class="cert-status status-pending">⏳ Pending</div>
+            </div>
+            <div class="cert-badge"
+              style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:12px;margin-bottom:8px">
+              <div class="cert-icon">🟡</div>
+              <div>
+                <div class="cert-name">KCSA — Kubernetes & Cloud Native Security Associate</div>
+                <div class="cert-org">CNCF · Associate Level · Step 2</div>
+              </div>
+              <div class="cert-status status-pending">⏳ Pending</div>
+            </div>
+            <div class="cert-badge"
+              style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.2);border-radius:12px;margin-bottom:8px">
+              <div class="cert-icon">🔵</div>
+              <div>
+                <div class="cert-name">CKAD — Certified Kubernetes Application Developer</div>
+                <div class="cert-org">CNCF · Professional Level · Step 3</div>
+              </div>
+              <div class="cert-status status-pending">⏳ Pending</div>
+            </div>
+            <div class="cert-badge"
+              style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.2);border-radius:12px;margin-bottom:8px">
+              <div class="cert-icon">🔵</div>
+              <div>
+                <div class="cert-name">CKA — Certified Kubernetes Administrator</div>
+                <div class="cert-org">CNCF · Professional Level · Step 4</div>
+              </div>
+              <div class="cert-status status-pending">⏳ Pending</div>
+            </div>
+            <div class="cert-badge"
+              style="background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.2);border-radius:12px">
+              <div class="cert-icon">🟣</div>
+              <div>
+                <div class="cert-name">CKS — Certified Kubernetes Security Specialist</div>
+                <div class="cert-org">CNCF · Expert Level · Requires CKA · Step 5</div>
+              </div>
+              <div class="cert-status status-pending">⏳ Pending</div>
+            </div>
+          </div>
+          <div class="glass card-pad" style="margin-top:16px">
+            <div class="section-eyebrow" style="margin-bottom:14px">KEY LEARNINGS</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="font-size:0.83rem;color:var(--txt2)" contenteditable="true">• Consistency in learning beats
+                intelligence every time</div>
+              <div style="font-size:0.83rem;color:var(--txt2)" contenteditable="true">• First principles thinking solves
+                any engineering problem</div>
+              <div style="font-size:0.83rem;color:var(--txt2)" contenteditable="true">• Infrastructure is a reflection
+                of the thinking behind it</div>
+              <div style="font-size:0.83rem;color:var(--txt2)" contenteditable="true">• Add your own insight here...
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+     PAGE: GROWTH — THE STAR
+══════════════════════════════════ -->
+  <div class="page" id="page-growth">
+    <div class="container">
+
+      <!-- Hero banner -->
+      <div class="growth-hero reveal">
+        <div class="growth-hero-left">
+          <div class="growth-eyebrow">
+            <span class="pulse-dot" style="background:var(--g1)"></span>
+            LIVE GROWTH TRACKING
+          </div>
+          <h2 class="growth-h">Your <span class="grad-text">Growth</span><br>Dashboard</h2>
+          <p class="growth-sub" contenteditable="true">Every habit logged. Every day counts. This is your proof that you
+            showed up — and kept showing up.</p>
+          <div class="mini-stats">
+            <div class="mini-stat">
+              <div class="n" id="g-streak">🔥 0</div>
+              <div class="l">Current Streak</div>
+            </div>
+            <div class="mini-stat">
+              <div class="n" id="g-pct">0%</div>
+              <div class="l">Done Today</div>
+            </div>
+            <div class="mini-stat">
+              <div class="n" id="g-day">Day 1</div>
+              <div class="l">On Journey</div>
+            </div>
+          </div>
+        </div>
+        <!-- Inline SVG Growth Illustration -->
+        <div class="growth-svg-wrap">
+          <svg viewBox="0 0 280 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Background glow -->
+            <ellipse cx="140" cy="200" rx="110" ry="30" fill="url(#glow1)" opacity="0.4" />
+            <!-- Steps / bars growing -->
+            <rect x="20" y="180" width="36" height="40" rx="8" fill="url(#barGrad)" opacity="0.7" />
+            <rect x="68" y="155" width="36" height="65" rx="8" fill="url(#barGrad)" opacity="0.8" />
+            <rect x="116" y="120" width="36" height="100" rx="8" fill="url(#barGrad)" opacity="0.9" />
+            <rect x="164" y="85" width="36" height="135" rx="8" fill="url(#barGrad)" />
+            <rect x="212" y="45" width="36" height="175" rx="8" fill="url(#barGrad)" />
+            <!-- Growth curve line -->
+            <path d="M38 176 Q86 148 134 116 Q182 80 230 40" stroke="url(#lineGrad)" stroke-width="3"
+              stroke-linecap="round" fill="none">
+              <animate attributeName="stroke-dashoffset" from="300" to="0" dur="2s" fill="freeze" />
+            </path>
+            <!-- Star / celebration on top -->
+            <circle cx="230" cy="38" r="12" fill="url(#starGrad)" opacity="0.9">
+              <animate attributeName="r" values="10;14;10" dur="2s" repeatCount="indefinite" />
+            </circle>
+            <text x="226" y="43" font-size="12" fill="white">★</text>
+            <!-- Labels -->
+            <text x="30" y="196" font-size="9" fill="#a78bfa" opacity="0.7">1%</text>
+            <text x="174" y="78" font-size="9" fill="#a78bfa" opacity="0.9">Goal</text>
+            <!-- Floating sparkles -->
+            <circle cx="60" cy="60" r="3" fill="#ec4899" opacity="0.6">
+              <animate attributeName="opacity" values="0.3;1;0.3" dur="3s" repeatCount="indefinite" />
+            </circle>
+            <circle cx="200" cy="20" r="2" fill="#8b5cf6" opacity="0.8">
+              <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite" begin="0.5s" />
+            </circle>
+            <circle cx="100" cy="30" r="2.5" fill="#10b981" opacity="0.7">
+              <animate attributeName="opacity" values="0.2;0.9;0.2" dur="2.5s" repeatCount="indefinite" begin="1s" />
+            </circle>
+            <defs>
+              <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#8b5cf6" />
+                <stop offset="100%" stop-color="#7c3aed" stop-opacity="0.6" />
+              </linearGradient>
+              <linearGradient id="lineGrad" x1="0" y1="1" x2="1" y2="0">
+                <stop offset="0%" stop-color="#8b5cf6" />
+                <stop offset="100%" stop-color="#ec4899" />
+              </linearGradient>
+              <linearGradient id="starGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#f59e0b" />
+                <stop offset="100%" stop-color="#ec4899" />
+              </linearGradient>
+              <radialGradient id="glow1">
+                <stop offset="0%" stop-color="#8b5cf6" />
+                <stop offset="100%" stop-color="transparent" />
+              </radialGradient>
+            </defs>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Progress ring + weekly chart -->
+      <div class="grid2" style="margin-bottom:24px">
+        <div class="glass card-pad day-ring-section reveal d1">
+          <div
+            style="font-size:0.72rem;color:var(--txt3);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:20px">
+            TODAY'S PROGRESS</div>
+          <div class="ring-wrap">
+            <canvas id="ringChart" width="180" height="180" style="max-width:180px"></canvas>
+            <div class="ring-inner">
+              <div class="ring-num" id="ring-pct2">0%</div>
+              <div class="ring-label-sm" id="ring-cnt">0/16</div>
+            </div>
+          </div>
+          <div style="margin-top:16px;font-size:0.8rem;color:var(--txt3);text-align:center" id="today-label"></div>
+        </div>
+        <div class="glass card-pad reveal d2">
+          <div
+            style="font-size:0.72rem;color:var(--txt3);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:16px">
+            WEEKLY OVERVIEW</div>
+          <div class="chart-wrap"><canvas id="weekChart"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Habit tracker -->
+      <div class="glass card-pad reveal d3" style="margin-bottom:24px">
+        <div class="habit-header-row">
+          <div>
+            <div style="font-size:1.05rem;font-weight:800;color:var(--txt)">Daily Habits</div>
+            <div style="font-size:0.75rem;color:var(--txt3);margin-top:2px" id="h-date"></div>
+          </div>
+          <div class="habit-toolbar">
+            <button class="hbtn green-btn" onclick="checkAll(true)">✓ All Done</button>
+            <button class="hbtn" onclick="checkAll(false)">↺ Reset</button>
+          </div>
+        </div>
+        <div class="habits-grid" id="habits-grid"></div>
+        <div class="add-row">
+          <input class="h-input" type="text" id="new-habit" placeholder="+ Add a new habit..."
+            onkeydown="if(event.key==='Enter')addHabit()">
+          <button class="h-add" onclick="addHabit()">Add</button>
+        </div>
+      </div>
+
+      <!-- Monthly chart -->
+      <div class="glass card-pad reveal d4" style="margin-bottom:32px">
+        <div
+          style="font-size:0.72rem;color:var(--txt3);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:16px">
+          MONTHLY TREND — JUNE 2026</div>
+        <div class="chart-wrap" style="height:180px"><canvas id="monthChart"></canvas></div>
+      </div>
+
+      <!-- Growth Mindset Cards -->
+      <div class="section-eyebrow reveal">GROWTH MINDSET</div>
+      <h3 class="section-h reveal d1" style="font-size:1.8rem;margin-bottom:8px">The <span
+          class="grad-text">Principles</span> I Live By</h3>
+      <p class="section-sub reveal d2" style="margin-bottom:24px">Not just habits — a philosophy of constant improvement
+      </p>
+
+      <div class="mindset-grid">
+        <!-- Card 1: 1% Better -->
+        <div class="mindset-card reveal d1">
+          <div class="m-svg">
+            <svg viewBox="0 0 80 80" fill="none">
+              <circle cx="40" cy="40" r="36" fill="rgba(139,92,246,0.1)" stroke="rgba(139,92,246,0.2)"
+                stroke-width="1.5" />
+              <path d="M20 55 L30 40 L40 45 L55 28 L60 30" stroke="url(#mg1)" stroke-width="3" stroke-linecap="round"
+                stroke-linejoin="round" fill="none" />
+              <circle cx="60" cy="25" r="6" fill="url(#mg1)" />
+              <text x="56" y="29" font-size="7" fill="white" font-weight="bold">+1</text>
+              <defs>
+                <linearGradient id="mg1" x1="0" y1="1" x2="1" y2="0">
+                  <stop stop-color="#8b5cf6" />
+                  <stop offset="1" stop-color="#ec4899" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="m-title">1% Better Every Day</div>
+          <div class="m-desc">37× better in a year. Tiny consistent improvements compound into extraordinary results.
+          </div>
+        </div>
+        <!-- Card 2: Systems -->
+        <div class="mindset-card reveal d2">
+          <div class="m-svg">
+            <svg viewBox="0 0 80 80" fill="none">
+              <circle cx="40" cy="40" r="36" fill="rgba(16,185,129,0.08)" stroke="rgba(16,185,129,0.2)"
+                stroke-width="1.5" />
+              <rect x="28" y="28" width="24" height="24" rx="6" stroke="#10b981" stroke-width="2" fill="none" />
+              <path d="M34 40 L38 44 L46 36" stroke="#10b981" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round" />
+              <path d="M40 20 L40 28M40 52 L40 60M20 40 L28 40M52 40 L60 40" stroke="#10b981" stroke-width="1.5"
+                stroke-linecap="round" opacity="0.5" />
+            </svg>
+          </div>
+          <div class="m-title">Build Systems, Not Goals</div>
+          <div class="m-desc">Goals set direction. Systems guarantee arrival. Automate the process of becoming better.
+          </div>
+        </div>
+        <!-- Card 3: Compound -->
+        <div class="mindset-card reveal d3">
+          <div class="m-svg">
+            <svg viewBox="0 0 80 80" fill="none">
+              <circle cx="40" cy="40" r="36" fill="rgba(245,158,11,0.08)" stroke="rgba(245,158,11,0.2)"
+                stroke-width="1.5" />
+              <path d="M18 58 Q25 56 30 50 Q35 44 38 36 Q41 26 44 20 L46 20 L46 58Z" fill="url(#compGrad)"
+                opacity="0.3" />
+              <path d="M18 58 Q25 56 30 50 Q35 44 38 36 Q41 26 44 20" stroke="url(#compGrad)" stroke-width="2.5"
+                stroke-linecap="round" fill="none" />
+              <defs>
+                <linearGradient id="compGrad" x1="0" y1="1" x2="0.8" y2="0">
+                  <stop stop-color="#f59e0b" />
+                  <stop offset="1" stop-color="#10b981" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="m-title">Compound Growth</div>
+          <div class="m-desc">Like interest in a bank — the longer you stay consistent, the faster the results
+            accelerate.</div>
+        </div>
+        <!-- Card 4: Discipline -->
+        <div class="mindset-card reveal d1">
+          <div class="m-svg">
+            <svg viewBox="0 0 80 80" fill="none">
+              <circle cx="40" cy="40" r="36" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.2)"
+                stroke-width="1.5" />
+              <path d="M40 20 L43 33 L56 33 L46 41 L50 54 L40 46 L30 54 L34 41 L24 33 L37 33Z" fill="url(#discGrad)"
+                opacity="0.9" />
+              <defs>
+                <linearGradient id="discGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop stop-color="#3b82f6" />
+                  <stop offset="1" stop-color="#8b5cf6" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="m-title">Discipline = Freedom</div>
+          <div class="m-desc">The most disciplined person is the most free. Habits remove decision fatigue and unlock
+            potential.</div>
+        </div>
+        <!-- Card 5: Reflect -->
+        <div class="mindset-card reveal d2">
+          <div class="m-svg">
+            <svg viewBox="0 0 80 80" fill="none">
+              <circle cx="40" cy="40" r="36" fill="rgba(236,72,153,0.08)" stroke="rgba(236,72,153,0.2)"
+                stroke-width="1.5" />
+              <circle cx="40" cy="35" r="12" stroke="#ec4899" stroke-width="2" fill="none" />
+              <path d="M34 35 Q37 42 40 35 Q43 28 46 35" stroke="#ec4899" stroke-width="1.5" stroke-linecap="round"
+                fill="none" />
+              <path d="M30 50 Q40 58 50 50" stroke="#ec4899" stroke-width="2" stroke-linecap="round" fill="none"
+                opacity="0.5" />
+            </svg>
+          </div>
+          <div class="m-title">Reflect & Adapt</div>
+          <div class="m-desc">Track what you do, not what you wish. Honest data is the only foundation for real change.
+          </div>
+        </div>
+        <!-- Card 6: Environment -->
+        <div class="mindset-card reveal d3">
+          <div class="m-svg">
+            <svg viewBox="0 0 80 80" fill="none">
+              <circle cx="40" cy="40" r="36" fill="rgba(16,185,129,0.06)" stroke="rgba(16,185,129,0.15)"
+                stroke-width="1.5" />
+              <!-- Brain simplified -->
+              <path
+                d="M30 44 Q24 42 24 36 Q24 28 32 26 Q34 20 40 20 Q46 20 48 26 Q56 28 56 36 Q56 42 50 44 Q50 52 40 54 Q30 52 30 44Z"
+                stroke="url(#brainGrad)" stroke-width="2" fill="url(#brainFill)" />
+              <path d="M36 34 Q40 38 44 34M38 40 Q40 43 42 40" stroke="white" stroke-width="1.2" stroke-linecap="round"
+                opacity="0.6" />
+              <defs>
+                <linearGradient id="brainGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop stop-color="#10b981" />
+                  <stop offset="1" stop-color="#8b5cf6" />
+                </linearGradient>
+                <linearGradient id="brainFill" x1="0" y1="0" x2="1" y2="1">
+                  <stop stop-color="rgba(16,185,129,0.15)" />
+                  <stop offset="1" stop-color="rgba(139,92,246,0.1)" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="m-title">Train Your Brain</div>
+          <div class="m-desc">Neuroplasticity is real. Repeated habits physically rewire the brain for success over
+            time.</div>
+        </div>
+      </div>
+
+      <!-- Quote rotator -->
+      <div class="quote-section reveal" style="margin-top:32px">
+        <div class="quote-text" id="q-text">"We are what we repeatedly do. Excellence, then, is not an act, but a
+          habit."</div>
+        <div class="quote-author" id="q-auth">— Aristotle</div>
+        <div class="quote-dots" id="q-dots"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+     PAGE: SKILLS
+══════════════════════════════════ -->
+  <div class="page" id="page-skills">
+    <div class="container">
+      <div class="section-eyebrow reveal">ABILITIES</div>
+      <h2 class="section-h reveal d1">Skills & <span class="grad-text">Expertise</span></h2>
+      <p class="section-sub reveal d2">Technical, mental, and personal — tracked honestly, updated as I grow.</p>
+      <div class="skills-layout">
+        <div class="reveal-l">
+          <div class="skill-tabs-row">
+            <button class="stab active" onclick="switchTab('technical',this)">💻 Technical</button>
+            <button class="stab" onclick="switchTab('devops',this)">☁️ Cloud & DevOps</button>
+            <button class="stab" onclick="switchTab('mental',this)">🧠 Mental</button>
+            <button class="stab" onclick="switchTab('problemsolving',this)">🎯 Problem Solving</button>
+            <button class="stab" onclick="switchTab('business',this)">💼 Business</button>
+            <button class="stab" onclick="switchTab('physical',this)">💪 Physical</button>
+          </div>
+          <div class="skill-panel active" id="panel-technical">
+            <div id="bars-technical"></div>
+          </div>
+          <div class="skill-panel" id="panel-devops">
+            <div id="bars-devops"></div>
+          </div>
+          <div class="skill-panel" id="panel-mental">
+            <div id="bars-mental"></div>
+          </div>
+          <div class="skill-panel" id="panel-problemsolving">
+            <div id="bars-problemsolving"></div>
+          </div>
+          <div class="skill-panel" id="panel-business">
+            <div id="bars-business"></div>
+          </div>
+          <div class="skill-panel" id="panel-physical">
+            <div id="bars-physical"></div>
+          </div>
+        </div>
+        <div class="reveal-r">
+          <div
+            style="font-size:0.72rem;color:var(--txt3);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:16px">
+            ABILITY RADAR</div>
+          <div class="radar-wrap"><canvas id="radarChart"></canvas></div>
+          <div class="glass card-pad"
+            style="margin-top:20px;background:linear-gradient(135deg,rgba(139,92,246,0.06),rgba(236,72,153,0.04))">
+            <div class="section-eyebrow" style="margin-bottom:12px">🚀 CURRENTLY BUILDING</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="font-size:0.83rem;color:var(--txt2)" contenteditable="true">• Kubernetes CKA & CKS
+                certification track</div>
+              <div style="font-size:0.83rem;color:var(--txt2)" contenteditable="true">• Advanced Prometheus & Grafana
+                monitoring</div>
+              <div style="font-size:0.83rem;color:var(--txt2)" contenteditable="true">• Public Speaking & Business
+                Communication</div>
+              <div style="font-size:0.83rem;color:var(--txt2)" contenteditable="true">• Add your next skill here...
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+     PAGE: GOALS
+══════════════════════════════════ -->
+  <div class="page" id="page-goals">
+    <div class="container">
+      <div class="section-eyebrow reveal">WHERE I'M HEADED</div>
+      <h2 class="section-h reveal d1">Goals & <span class="grad-text">Vision</span></h2>
+      <p class="section-sub reveal d2">Tracked, honest, and updated. Not just wishes — targets with progress.</p>
+      <div class="grid2" style="gap:40px;align-items:start">
+        <div class="reveal-l">
+          <div
+            style="font-size:0.72rem;color:var(--txt3);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:20px">
+            2026 GOALS</div>
+          <div id="goals-list"></div>
+          <button onclick="addGoal()"
+            style="width:100%;background:rgba(139,92,246,0.08);border:1.5px dashed rgba(139,92,246,0.3);color:var(--p2);border-radius:16px;padding:14px;font-size:0.82rem;font-weight:700;margin-top:8px;transition:all 0.2s"
+            onmouseover="this.style.background='rgba(139,92,246,0.14)'"
+            onmouseout="this.style.background='rgba(139,92,246,0.08)'">+ Add New Goal</button>
+        </div>
+        <div class="reveal-r">
+          <div
+            style="font-size:0.72rem;color:var(--txt3);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:20px">
+            5-YEAR VISION</div>
+          <div class="vision-cards">
+            <div class="vision-card glass">
+              <div class="v-cat">☁️ CAREER</div>
+              <p class="bio-text" contenteditable="true">Lead cloud-native infrastructure at scale. Certified Kubernetes
+                expert. Build resilient systems that serve millions.</p>
+            </div>
+            <div class="vision-card glass">
+              <div class="v-cat">🧠 PERSONAL</div>
+              <p class="bio-text" contenteditable="true">Become the most disciplined, clear-minded version of myself.
+                Daily habits that run on autopilot. Mental strength under pressure.</p>
+            </div>
+            <div class="vision-card glass">
+              <div class="v-cat">💰 FINANCIAL</div>
+              <p class="bio-text" contenteditable="true">Financial independence through high-value skills, strategic
+                investments, and multiple income streams. Freedom to choose.</p>
+            </div>
+            <div class="vision-card glass">
+              <div class="v-cat">💼 BUSINESS</div>
+              <p class="bio-text" contenteditable="true">Build deep business communication skills. Speak on stages. Lead
+                with confidence. Bridge technical and business worlds.</p>
+            </div>
+          </div>
+          <div class="affirm-card">
+            <div class="affirm-text" id="affirm-txt">"I am becoming the person I need to be to achieve the life I want
+              to live."</div>
+            <div class="affirm-by">— My Daily Affirmation</div>
+            <button class="affirm-next" onclick="nextAffirm()">Next Affirmation →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════ -->
+  <script>
+    // ─── DATA ───────────────────────────────
+    const HK = 'su2_habits', CK = 'su2_check_', GK = 'su2_goals', PK = 'su2_photo', TK = 'su2_theme', JK = 'su2_journey';
+
+    let habits = JSON.parse(localStorage.getItem(HK) || 'null') || [
+      { name: 'Complete assignments', streak: 3 },
+      { name: 'Read 10 pages of a book', streak: 5 },
+      { name: 'Exercise for 30 minutes', streak: 7 },
+      { name: 'Drink 8 glasses of water', streak: 2 },
+      { name: "Plan next day's schedule", streak: 10 },
+      { name: 'Meditate for 10 minutes', streak: 4 },
+      { name: 'Check emails and updates', streak: 6 },
+      { name: 'Practice language skills', streak: 1 },
+      { name: 'Write in a journal', streak: 8 },
+      { name: 'Solve 3 practice problems', streak: 3 },
+      { name: 'Watch an educational video', streak: 5 },
+      { name: 'Update to-do list', streak: 9 },
+      { name: 'Take a 15-minute walk', streak: 2 },
+      { name: 'Get at least 7 hours of sleep', streak: 6 },
+      { name: 'Organize digital files', streak: 1 },
+      { name: 'Organize study desk', streak: 7 },
+    ];
+
+    let goals = JSON.parse(localStorage.getItem(GK) || 'null') || [
+      { icon: '🏋️', title: 'Exercise every day for 90 days', pct: 35, deadline: 'Sep 2026' },
+      { icon: '📚', title: 'Read 12 books this year', pct: 50, deadline: 'Dec 2026' },
+      { icon: '🧘', title: 'Meditate 10 min daily — no breaks', pct: 60, deadline: 'Dec 2026' },
+      { icon: '☸️', title: 'Pass CKA certification', pct: 20, deadline: 'Oct 2026' },
+      { icon: '✍️', title: 'Journal every single day', pct: 75, deadline: 'Dec 2026' },
+      { icon: '🗣️', title: 'Public speaking — give 3 talks', pct: 15, deadline: 'Dec 2026' },
+    ];
+
+    const skills = {
+      technical: [
+        { name: 'Python / Data Engineering', pct: 75, cls: 'fill-tech' },
+        { name: 'SQL & Databases', pct: 70, cls: 'fill-tech' },
+        { name: 'Web Development', pct: 65, cls: 'fill-tech' },
+        { name: 'System Design', pct: 55, cls: 'fill-tech' },
+        { name: 'APIs & Integrations', pct: 72, cls: 'fill-tech' },
+        { name: 'Linux', pct: 78, cls: 'fill-tech' },
+      ],
+      devops: [
+        { name: 'Kubernetes', pct: 70, cls: 'fill-cloud' },
+        { name: 'Docker', pct: 80, cls: 'fill-cloud' },
+        { name: 'AWS', pct: 65, cls: 'fill-cloud' },
+        { name: 'Azure', pct: 55, cls: 'fill-cloud' },
+        { name: 'GCP', pct: 50, cls: 'fill-cloud' },
+        { name: 'DigitalOcean', pct: 68, cls: 'fill-cloud' },
+        { name: 'Hetzner', pct: 60, cls: 'fill-cloud' },
+        { name: 'GitHub Actions', pct: 75, cls: 'fill-cloud' },
+        { name: 'Jenkins', pct: 65, cls: 'fill-cloud' },
+        { name: 'Prometheus & Grafana', pct: 70, cls: 'fill-cloud' },
+        { name: 'Datadog', pct: 60, cls: 'fill-cloud' },
+        { name: 'Databases (Postgres / MySQL / Redis)', pct: 72, cls: 'fill-cloud' },
+      ],
+      mental: [
+        { name: 'Focus & Deep Work', pct: 80, cls: 'fill-mental' },
+        { name: 'Emotional Intelligence', pct: 70, cls: 'fill-mental' },
+        { name: 'Resilience', pct: 75, cls: 'fill-mental' },
+        { name: 'Mindfulness', pct: 65, cls: 'fill-mental' },
+        { name: 'Critical Thinking', pct: 78, cls: 'fill-mental' },
+        { name: 'Learning Speed', pct: 82, cls: 'fill-mental' },
+      ],
+      problemsolving: [
+        { name: 'Analytical Thinking', pct: 85, cls: 'fill-ps' },
+        { name: 'Debugging & Root Cause Analysis', pct: 80, cls: 'fill-ps' },
+        { name: 'System Troubleshooting', pct: 78, cls: 'fill-ps' },
+        { name: 'Algorithms & Data Structures', pct: 70, cls: 'fill-ps' },
+        { name: 'Creative Problem Solving', pct: 75, cls: 'fill-ps' },
+        { name: 'Decision Making Under Pressure', pct: 72, cls: 'fill-ps' },
+      ],
+      business: [
+        { name: 'Marketing', pct: 60, cls: 'fill-biz' },
+        { name: 'Sales', pct: 55, cls: 'fill-biz' },
+        { name: 'Public Speaking', pct: 50, cls: 'fill-biz' },
+        { name: 'Negotiation', pct: 58, cls: 'fill-biz' },
+        { name: 'Stakeholder Communication', pct: 70, cls: 'fill-biz' },
+        { name: 'Strategic Thinking', pct: 65, cls: 'fill-biz' },
+      ],
+      physical: [
+        { name: 'Overall Fitness', pct: 60, cls: 'fill-phys' },
+        { name: 'Endurance', pct: 55, cls: 'fill-phys' },
+        { name: 'Sleep Quality', pct: 70, cls: 'fill-phys' },
+        { name: 'Nutrition', pct: 65, cls: 'fill-phys' },
+        { name: 'Strength', pct: 50, cls: 'fill-phys' },
+        { name: 'Energy Levels', pct: 72, cls: 'fill-phys' },
+      ],
+    };
+
+    const quotes = [
+      { t: '"We are what we repeatedly do. Excellence, then, is not an act, but a habit."', a: '— Aristotle' },
+      { t: '"Success is the sum of small efforts, repeated day in and day out."', a: '— Robert Collier' },
+      { t: '"The secret of your future is hidden in your daily routine."', a: '— Mike Murdock' },
+      { t: '"Motivation gets you started. Habit keeps you going."', a: '— Jim Ryun' },
+      { t: '"You do not rise to the level of your goals. You fall to the level of your systems."', a: '— James Clear' },
+      { t: '"Small daily improvements are the key to staggering long-term results."', a: '— Robin Sharma' },
+    ];
+    const affirms = [
+      '"I am becoming the person I need to be to achieve the life I want to live."',
+      '"Every day I wake up is a chance to level up."',
+      '"Small habits, compounded daily, create extraordinary results."',
+      '"My discipline is stronger than my excuses."',
+      '"I am consistent, focused, and always improving."',
+      '"The infrastructure of my mind is being upgraded daily."',
+    ];
+
+    let qIdx = 0, affIdx = 0;
+    let ringChartInst, weekChartInst, monthChartInst, radarChartInst;
+
+    // ─── THEME ──────────────────────────────
+    function toggleTheme() {
+      const h = document.documentElement;
+      const dark = h.getAttribute('data-theme') === 'dark';
+      h.setAttribute('data-theme', dark ? 'light' : 'dark');
+      document.getElementById('themeBtn').textContent = dark ? '🌑 Dark' : '☀️ Light';
+      localStorage.setItem(TK, dark ? 'light' : 'dark');
+      rebuildCharts();
+    }
+
+    // ─── NAVIGATION ─────────────────────────
+    const PAGES = ['home', 'about', 'education', 'growth', 'skills', 'goals'];
+    function goTo(pg) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      document.getElementById('page-' + pg).classList.add('active');
+      const links = document.querySelectorAll('.nav-link');
+      const idx = PAGES.indexOf(pg);
+      if (links[idx]) links[idx].classList.add('active');
+      window.scrollTo(0, 0);
+      setTimeout(() => observeReveal(), 50);
+      if (pg === 'growth') setTimeout(initGrowthCharts, 100);
+      if (pg === 'skills') setTimeout(initSkillCharts, 100);
+    }
+
+    // ─── REVEAL ON SCROLL ───────────────────
+    function observeReveal() {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target) } });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el => {
+        if (!el.classList.contains('visible')) io.observe(el);
+      });
+    }
+
+    // ─── PHOTO ──────────────────────────────
+    function uploadPhoto(e) {
+      const f = e.target.files[0]; if (!f) return;
+      const r = new FileReader();
+      r.onload = ev => { localStorage.setItem(PK, ev.target.result); applyPhoto(ev.target.result); };
+      r.readAsDataURL(f);
+    }
+    function applyPhoto(src) {
+      const ids = ['hero-img', 'about-img'];
+      const phs = ['hero-ph', 'about-ph'];
+      ids.forEach((id, i) => {
+        const img = document.getElementById(id);
+        const ph = document.getElementById(phs[i]);
+        if (img) { img.src = src; img.style.display = ''; } if (ph) ph.style.display = 'none';
+      });
+      const navP = document.getElementById('nav-photo');
+      const navI = document.getElementById('nav-init');
+      if (navP) { navP.src = src; navP.style.display = ''; }
+      if (navI) navI.style.display = 'none';
+    }
+
+    // ─── HABITS ─────────────────────────────
+    const todayKey = () => CK + new Date().toDateString();
+    const getChecked = () => JSON.parse(localStorage.getItem(todayKey()) || '[]');
+    const saveChecked = arr => localStorage.setItem(todayKey(), JSON.stringify(arr));
+
+    function renderHabits() {
+      const grid = document.getElementById('habits-grid'); if (!grid) return;
+      const checked = getChecked();
+      grid.innerHTML = '';
+      habits.forEach((h, i) => {
+        const done = checked.includes(i);
+        const d = document.createElement('div');
+        d.className = 'habit-card' + (done ? ' done' : '');
+        d.innerHTML = `<div class="h-check">${done ? '✓' : ''}</div>
+      <span class="h-name">${h.name}</span>
+      ${h.streak > 0 ? `<span class="h-streak">🔥${h.streak}</span>` : ''}`;
+        d.onclick = () => toggleHabit(i);
+        grid.appendChild(d);
+      });
+      updateProgress();
+    }
+
+    function toggleHabit(i) {
+      const c = getChecked(); const idx = c.indexOf(i);
+      if (idx >= 0) c.splice(idx, 1); else c.push(i);
+      saveChecked(c); renderHabits(); updateRingChart(); updateHeroStats();
+    }
+    function checkAll(v) {
+      saveChecked(v ? habits.map((_, i) => i) : []);
+      renderHabits(); updateRingChart(); updateHeroStats();
+    }
+    function addHabit() {
+      const inp = document.getElementById('new-habit');
+      const n = inp.value.trim(); if (!n) return;
+      habits.push({ name: n, streak: 0 });
+      localStorage.setItem(HK, JSON.stringify(habits));
+      inp.value = ''; renderHabits(); updateHeroStats();
+    }
+    function updateProgress() {
+      const c = getChecked().length, t = habits.length;
+      const pct = t ? Math.round(c / t * 100) : 0;
+      ['ring-pct2'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = pct + '%' });
+      ['ring-cnt'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = c + '/' + t });
+      const dl = document.getElementById('h-date');
+      if (dl) dl.textContent = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      const dl2 = document.getElementById('today-label');
+      if (dl2) dl2.textContent = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' });
+    }
+    function updateHeroStats() {
+      const c = getChecked().length, t = habits.length;
+      const pct = t ? Math.round(c / t * 100) : 0;
+      ['h-today', 'g-pct'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = pct + '%' });
+      ['h-count'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = t });
+      let streak = 0;
+      const today = new Date();
+      for (let d = 0; d < 365; d++) {
+        const day = new Date(today); day.setDate(day.getDate() - d);
+        const arr = JSON.parse(localStorage.getItem(CK + day.toDateString()) || '[]');
+        if (arr.length > 0) streak++; else if (d > 0) break;
+      }
+      ['h-streak', 'g-streak'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = '🔥 ' + streak });
+      // Journey day
+      let startDate = localStorage.getItem(JK);
+      if (!startDate) { startDate = new Date().toISOString(); localStorage.setItem(JK, startDate); }
+      const days = Math.floor((Date.now() - new Date(startDate).getTime()) / (864e5)) + 1;
+      const gd = document.getElementById('g-day'); if (gd) gd.textContent = 'Day ' + days;
+    }
+
+    // ─── CHARTS ─────────────────────────────
+    function chartColors() {
+      const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+      return { grid: dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', text: dark ? '#b0aed4' : '#4a4a6a' };
+    }
+
+    function initGrowthCharts() {
+      const cc = chartColors();
+      // Ring
+      if (ringChartInst) ringChartInst.destroy();
+      const checked = getChecked().length, total = habits.length;
+      ringChartInst = new Chart(document.getElementById('ringChart'), {
+        type: 'doughnut',
+        data: {
+          datasets: [{
+            data: [checked, total - checked],
+            backgroundColor: ['#8b5cf6', 'rgba(139,92,246,0.1)'],
+            borderWidth: 0, borderRadius: 10,
+          }]
+        },
+        options: { cutout: '80%', plugins: { legend: { display: false }, tooltip: { enabled: false } }, animation: { duration: 1000 } }
+      });
+
+      // Week
+      if (weekChartInst) weekChartInst.destroy();
+      const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      const today = new Date();
+      const wd = days.map((_, i) => {
+        const d = new Date(today); d.setDate(d.getDate() - (6 - i));
+        return JSON.parse(localStorage.getItem(CK + d.toDateString()) || '[]').length;
+      });
+      weekChartInst = new Chart(document.getElementById('weekChart'), {
+        type: 'bar',
+        data: {
+          labels: days,
+          datasets: [{
+            data: wd,
+            backgroundColor: wd.map((_, i) => i === 6 ? '#8b5cf6' : 'rgba(139,92,246,0.3)'),
+            borderRadius: 8, borderSkipped: false,
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { color: cc.grid }, ticks: { color: cc.text, font: { size: 11 } } },
+            y: { grid: { color: cc.grid }, ticks: { color: cc.text, font: { size: 11 } }, max: habits.length, beginAtZero: true }
+          }
+        }
+      });
+
+      // Month
+      if (monthChartInst) monthChartInst.destroy();
+      const md = Array.from({ length: 20 }, () => Math.floor(Math.random() * (habits.length - 6) + 6));
+      monthChartInst = new Chart(document.getElementById('monthChart'), {
+        type: 'line',
+        data: {
+          labels: Array.from({ length: 20 }, (_, i) => `Jun ${i + 1}`),
+          datasets: [{
+            data: md, borderColor: '#a78bfa',
+            backgroundColor: 'rgba(139,92,246,0.08)',
+            borderWidth: 2.5, pointRadius: 4, pointBackgroundColor: '#8b5cf6',
+            tension: 0.5, fill: true,
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { color: cc.grid }, ticks: { color: cc.text, font: { size: 10 }, maxTicksLimit: 10 } },
+            y: { grid: { color: cc.grid }, ticks: { color: cc.text, font: { size: 10 } }, beginAtZero: true, max: habits.length }
+          }
+        }
+      });
+
+      updateProgress(); updateRingChart();
+    }
+
+    function updateRingChart() {
+      if (!ringChartInst) return;
+      const c = getChecked().length, t = habits.length;
+      ringChartInst.data.datasets[0].data = [c, t - c];
+      ringChartInst.update();
+      const pct = t ? Math.round(c / t * 100) : 0;
+      const rp = document.getElementById('ring-pct2'); if (rp) rp.textContent = pct + '%';
+      const rc = document.getElementById('ring-cnt'); if (rc) rc.textContent = c + '/' + t;
+    }
+
+    function initSkillCharts() {
+      const cc = chartColors();
+      ['technical', 'devops', 'mental', 'problemsolving', 'business', 'physical'].forEach(cat => {
+        const container = document.getElementById('bars-' + cat); if (!container) return;
+        container.innerHTML = '';
+        (skills[cat] || []).forEach(s => {
+          const div = document.createElement('div'); div.className = 'sbar';
+          div.innerHTML = `<div class="sbar-row"><span class="s-name" contenteditable="true">${s.name}</span><span class="s-pct">${s.pct}%</span></div>
+        <div class="sbar-track"><div class="sbar-fill ${s.cls}" data-pct="${s.pct}" style="width:0%"></div></div>`;
+          container.appendChild(div);
+        });
+      });
+      // Animate bars
+      setTimeout(() => {
+        document.querySelectorAll('.sbar-fill').forEach(b => { b.style.width = b.dataset.pct + '%' });
+      }, 200);
+
+      // Radar
+      if (radarChartInst) radarChartInst.destroy();
+      const avg = cat => Math.round((skills[cat] || []).reduce((a, b) => a + b.pct, 0) / ((skills[cat] || [1]).length || 1));
+      radarChartInst = new Chart(document.getElementById('radarChart'), {
+        type: 'radar',
+        data: {
+          labels: ['Technical', 'Cloud & DevOps', 'Mental', 'Problem Solving', 'Business', 'Physical'],
+          datasets: [{
+            data: [avg('technical'), avg('devops'), avg('mental'), avg('problemsolving'), avg('business'), avg('physical')],
+            backgroundColor: 'rgba(139,92,246,0.15)',
+            borderColor: '#a78bfa', pointBackgroundColor: '#8b5cf6',
+            borderWidth: 2.5, pointRadius: 5, pointHoverRadius: 7,
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            r: {
+              min: 0, max: 100,
+              grid: { color: cc.grid }, angleLines: { color: cc.grid },
+              pointLabels: { color: cc.text, font: { size: 11, weight: '600' } },
+              ticks: { display: false }
+            }
+          }
+        }
+      });
+    }
+
+    function rebuildCharts() {
+      const pg = document.querySelector('.page.active')?.id?.replace('page-', '');
+      if (pg === 'growth') setTimeout(initGrowthCharts, 100);
+      if (pg === 'skills') setTimeout(initSkillCharts, 100);
+    }
+
+    // ─── GOALS ──────────────────────────────
+    function renderGoals() {
+      const list = document.getElementById('goals-list'); if (!list) return;
+      list.innerHTML = '';
+      goals.forEach((g, i) => {
+        const d = document.createElement('div'); d.className = 'goal-card glass';
+        d.innerHTML = `<div class="g-icon">${g.icon}</div>
+      <div class="g-content">
+        <div class="g-title" contenteditable="true" onblur="goals[${i}].title=this.textContent;saveGoals()">${g.title}</div>
+        <div class="g-bar-track"><div class="g-bar-fill" style="width:${g.pct}%"></div></div>
+        <div class="g-meta"><span class="g-pct">${g.pct}%</span><span class="g-date">📅 ${g.deadline}</span></div>
+      </div>
+      <div class="g-ctrl">
+        <button class="g-btn g-btn-p" onclick="chPct(${i},10)">+10%</button>
+        <button class="g-btn g-btn-m" onclick="chPct(${i},-10)">-10%</button>
+      </div>`;
+        list.appendChild(d);
+      });
+    }
+    function chPct(i, d) { goals[i].pct = Math.min(100, Math.max(0, goals[i].pct + d)); saveGoals(); renderGoals(); }
+    function addGoal() {
+      const icons = ['🎯', '⭐', '🔥', '💡', '📖', '🏃', '🌱', '💰', '☁️', '🧠'];
+      goals.push({ icon: icons[Math.floor(Math.random() * icons.length)], title: 'New Goal — click to edit', pct: 0, deadline: 'Dec 2026' });
+      saveGoals(); renderGoals();
+    }
+    function saveGoals() { localStorage.setItem(GK, JSON.stringify(goals)); }
+
+    // ─── QUOTES ─────────────────────────────
+    function renderQuotes() {
+      const d = document.getElementById('q-dots'); if (!d) return;
+      d.innerHTML = '';
+      quotes.forEach((_, i) => {
+        const dot = document.createElement('div'); dot.className = 'qdot' + (i === qIdx ? ' active' : '');
+        dot.onclick = () => { qIdx = i; showQuote(); }; d.appendChild(dot);
+      });
+      const qt = document.getElementById('q-text'), qa = document.getElementById('q-auth');
+      if (qt) { qt.style.opacity = 0; setTimeout(() => { qt.textContent = quotes[qIdx].t; qt.style.opacity = 1; qt.style.transition = 'opacity 0.4s'; }, 200); }
+      if (qa) qa.textContent = quotes[qIdx].a;
+    }
+    function showQuote() { renderQuotes(); }
+    function nextAffirm() {
+      affIdx = (affIdx + 1) % affirms.length;
+      const el = document.getElementById('affirm-txt'); if (el) el.textContent = affirms[affIdx];
+    }
+
+    // ─── TABS ───────────────────────────────
+    function switchTab(cat, btn) {
+      document.querySelectorAll('.stab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.skill-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-' + cat).classList.add('active');
+      setTimeout(() => {
+        document.querySelectorAll('#panel-' + cat + ' .sbar-fill').forEach(b => { b.style.width = b.dataset.pct + '%' });
+      }, 100);
+    }
+
+    // ─── QUOTE AUTO-ROTATE ─────────────────
+    setInterval(() => { qIdx = (qIdx + 1) % quotes.length; renderQuotes(); }, 8000);
+
+    // ─── INIT ───────────────────────────────
+    window.onload = () => {
+      // Theme
+      const t = localStorage.getItem(TK) || 'dark';
+      document.documentElement.setAttribute('data-theme', t);
+      document.getElementById('themeBtn').textContent = t === 'dark' ? '☀️ Light' : '🌑 Dark';
+      // Photo
+      const ph = localStorage.getItem(PK); if (ph) applyPhoto(ph);
+      // Render
+      renderHabits(); renderGoals(); updateHeroStats(); renderQuotes();
+      // Reveal
+      setTimeout(observeReveal, 100);
+    };
+  </script>
+</body>
+
+</html>

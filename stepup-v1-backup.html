@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MR Sisodiya · Step-Up</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* ===== THEME VARIABLES ===== */
+:root {
+  --accent: #7c3aed;
+  --accent2: #a78bfa;
+  --accent3: #ec4899;
+  --green: #10b981;
+  --orange: #f59e0b;
+  --red: #ef4444;
+  --blue: #3b82f6;
+}
+[data-theme="dark"] {
+  --bg: #0d0d14;
+  --bg2: #13131e;
+  --bg3: #1a1a2e;
+  --bg4: #22223a;
+  --border: #2d2d48;
+  --text: #f0f0fa;
+  --text2: #b0b0cc;
+  --text3: #6b6b8a;
+  --card: #16162a;
+  --nav-bg: rgba(13,13,20,0.92);
+}
+[data-theme="light"] {
+  --bg: #f5f5ff;
+  --bg2: #ffffff;
+  --bg3: #ededfa;
+  --bg4: #e2e2f5;
+  --border: #d0d0e8;
+  --text: #1a1a2e;
+  --text2: #4a4a6a;
+  --text3: #8888aa;
+  --card: #ffffff;
+  --nav-bg: rgba(245,245,255,0.95);
+}
+
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+a { color: var(--accent2); text-decoration: none; }
+img { max-width: 100%; }
+button { cursor: pointer; font-family: inherit; border: none; }
+
+/* ===== NAV ===== */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: var(--nav-bg);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px; height: 60px;
+}
+.nav-logo {
+  font-size: 1.1rem; font-weight: 800; color: var(--accent2);
+  letter-spacing: 1px;
+}
+.nav-links { display: flex; gap: 4px; }
+.nav-link {
+  background: none; border: none; padding: 7px 14px;
+  border-radius: 8px; font-size: 0.78rem; font-weight: 600;
+  color: var(--text2); transition: all 0.2s; cursor: pointer;
+  letter-spacing: 0.3px;
+}
+.nav-link:hover { color: var(--text); background: var(--bg3); }
+.nav-link.active { color: var(--accent2); background: rgba(124,58,237,0.12); }
+.nav-right { display: flex; gap: 8px; align-items: center; }
+.theme-toggle {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 20px; padding: 5px 14px; font-size: 0.78rem;
+  color: var(--text2); transition: all 0.2s;
+}
+.theme-toggle:hover { border-color: var(--accent2); color: var(--accent2); }
+
+/* ===== PAGES ===== */
+.page { display: none; padding-top: 60px; min-height: 100vh; }
+.page.active { display: block; }
+.container { max-width: 1100px; margin: 0 auto; padding: 48px 24px; }
+.section-title {
+  font-size: 2rem; font-weight: 800; margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--accent2), var(--accent3));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.section-sub { color: var(--text3); font-size: 0.9rem; margin-bottom: 40px; }
+
+/* ===== HERO ===== */
+.hero {
+  min-height: calc(100vh - 60px);
+  display: flex; flex-direction: column; justify-content: center;
+  align-items: center; text-align: center; padding: 60px 24px;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,58,237,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-photo-wrapper {
+  position: relative; margin-bottom: 32px;
+}
+.hero-photo {
+  width: 160px; height: 160px; border-radius: 50%;
+  object-fit: cover; object-position: top;
+  border: 4px solid var(--accent2);
+  box-shadow: 0 0 0 8px rgba(124,58,237,0.15), 0 24px 64px rgba(0,0,0,0.3);
+}
+.hero-photo-placeholder {
+  width: 160px; height: 160px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent3));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 4rem; font-weight: 800; color: white;
+  border: 4px solid var(--accent2);
+  box-shadow: 0 0 0 8px rgba(124,58,237,0.15), 0 24px 64px rgba(0,0,0,0.3);
+}
+.photo-upload-btn {
+  position: absolute; bottom: 4px; right: 4px;
+  background: var(--accent); color: white;
+  border-radius: 50%; width: 32px; height: 32px;
+  font-size: 0.9rem; display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--bg); transition: transform 0.2s;
+}
+.photo-upload-btn:hover { transform: scale(1.1); }
+#photo-input { display: none; }
+.status-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3);
+  color: var(--green); padding: 5px 14px; border-radius: 20px;
+  font-size: 0.72rem; font-weight: 600; margin-bottom: 20px; letter-spacing: 0.5px;
+}
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
+.hero-name {
+  font-size: 3.2rem; font-weight: 900; line-height: 1.1;
+  background: linear-gradient(135deg, var(--text) 40%, var(--accent2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; margin-bottom: 12px;
+}
+.hero-role {
+  font-size: 1.1rem; color: var(--accent2); font-weight: 600; margin-bottom: 16px;
+}
+.hero-bio {
+  font-size: 1rem; color: var(--text2); max-width: 520px; line-height: 1.7;
+  margin: 0 auto 36px;
+}
+.stats-row {
+  display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px;
+}
+.stat-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 18px 24px; text-align: center;
+  min-width: 120px; transition: border-color 0.2s, transform 0.2s;
+}
+.stat-card:hover { border-color: var(--accent2); transform: translateY(-3px); }
+.stat-val { font-size: 1.8rem; font-weight: 800; color: var(--accent2); line-height: 1; }
+.stat-lbl { font-size: 0.65rem; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+.cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), #9333ea);
+  color: white; padding: 12px 28px; border-radius: 25px;
+  font-size: 0.9rem; font-weight: 700; transition: opacity 0.2s, transform 0.2s;
+}
+.btn-primary:hover { opacity: 0.9; transform: translateY(-2px); }
+.btn-secondary {
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--text); padding: 12px 28px; border-radius: 25px;
+  font-size: 0.9rem; font-weight: 600; transition: border-color 0.2s, transform 0.2s;
+}
+.btn-secondary:hover { border-color: var(--accent2); transform: translateY(-2px); }
+
+/* ===== CARDS ===== */
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 24px; transition: border-color 0.2s;
+}
+.card:hover { border-color: rgba(167,139,250,0.4); }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+/* ===== ABOUT ===== */
+.about-layout { display: grid; grid-template-columns: 1fr 1.6fr; gap: 32px; align-items: start; }
+.about-photo-section { display: flex; flex-direction: column; gap: 16px; }
+.about-photo {
+  width: 100%; aspect-ratio: 3/4; border-radius: 20px;
+  object-fit: cover; object-position: top;
+  border: 2px solid var(--border);
+}
+.about-photo-placeholder {
+  width: 100%; aspect-ratio: 3/4; border-radius: 20px;
+  background: linear-gradient(135deg, var(--accent), var(--accent3));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 5rem; position: relative; overflow: hidden;
+}
+.trait-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.trait-chip {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 20px; padding: 5px 14px; font-size: 0.72rem;
+  color: var(--text2); font-weight: 600;
+}
+.about-content { display: flex; flex-direction: column; gap: 20px; }
+.about-bio { font-size: 0.95rem; color: var(--text2); line-height: 1.8; }
+.values-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.value-card {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px 16px;
+}
+.value-icon { font-size: 1.4rem; margin-bottom: 6px; }
+.value-title { font-size: 0.8rem; font-weight: 700; color: var(--text); }
+.value-desc { font-size: 0.7rem; color: var(--text3); margin-top: 3px; }
+
+/* ===== TIMELINE ===== */
+.timeline { position: relative; padding-left: 32px; }
+.timeline::before {
+  content: ''; position: absolute; left: 10px; top: 0; bottom: 0;
+  width: 2px; background: linear-gradient(to bottom, var(--accent), var(--accent3));
+}
+.timeline-item { position: relative; margin-bottom: 32px; }
+.timeline-dot {
+  position: absolute; left: -27px; top: 6px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--accent); border: 3px solid var(--bg);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+.timeline-year {
+  font-size: 0.7rem; font-weight: 700; color: var(--accent2);
+  letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px;
+}
+.timeline-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.timeline-sub { font-size: 0.82rem; color: var(--text3); margin-bottom: 8px; }
+.timeline-desc { font-size: 0.82rem; color: var(--text2); line-height: 1.6; }
+
+/* ===== HABIT TRACKER ===== */
+.habit-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+.progress-ring-container { display: flex; justify-content: center; margin-bottom: 32px; }
+.ring-label { text-align: center; }
+.ring-pct { font-size: 2.2rem; font-weight: 900; color: var(--accent2); }
+.ring-sub { font-size: 0.75rem; color: var(--text3); }
+.habits-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+.habit-item {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 12px; padding: 12px 14px;
+  display: flex; align-items: center; gap: 10px;
+  transition: border-color 0.2s; cursor: pointer;
+}
+.habit-item.done { border-color: var(--green); background: rgba(16,185,129,0.06); }
+.habit-item.done .habit-name { color: var(--text); }
+.habit-checkbox {
+  width: 22px; height: 22px; border-radius: 6px;
+  border: 2px solid var(--border); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; transition: all 0.2s;
+}
+.habit-item.done .habit-checkbox { background: var(--green); border-color: var(--green); }
+.habit-name { font-size: 0.8rem; color: var(--text2); font-weight: 500; flex: 1; }
+.habit-streak { font-size: 0.7rem; color: var(--orange); font-weight: 700; }
+.add-habit-row { display: flex; gap: 8px; margin-top: 12px; }
+.habit-input {
+  flex: 1; background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 10px; padding: 10px 14px; font-size: 0.82rem;
+  color: var(--text); outline: none; font-family: inherit;
+}
+.habit-input:focus { border-color: var(--accent2); }
+.add-habit-btn {
+  background: var(--accent); color: white; border-radius: 10px;
+  padding: 10px 18px; font-size: 0.82rem; font-weight: 700;
+}
+.chart-container { position: relative; height: 220px; margin-top: 16px; }
+
+/* ===== SKILLS ===== */
+.skill-tabs { display: flex; gap: 6px; margin-bottom: 28px; flex-wrap: wrap; }
+.skill-tab {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 20px; padding: 6px 16px; font-size: 0.78rem;
+  font-weight: 600; color: var(--text2); transition: all 0.2s;
+}
+.skill-tab.active { background: var(--accent); color: white; border-color: var(--accent); }
+.skill-panel { display: none; }
+.skill-panel.active { display: block; }
+.skill-bar-item { margin-bottom: 18px; }
+.skill-bar-label {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 8px;
+}
+.skill-name { font-size: 0.85rem; font-weight: 600; color: var(--text); }
+.skill-pct { font-size: 0.8rem; color: var(--accent2); font-weight: 700; }
+.skill-bar-track {
+  height: 10px; background: var(--bg3); border-radius: 10px; overflow: hidden;
+  border: 1px solid var(--border);
+}
+.skill-bar-fill {
+  height: 100%; border-radius: 10px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  transition: width 1s cubic-bezier(0.4,0,0.2,1);
+}
+.radar-container { position: relative; height: 320px; }
+.skills-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+
+/* ===== GOALS ===== */
+.goals-grid { display: flex; flex-direction: column; gap: 14px; }
+.goal-item {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px 20px;
+  display: flex; align-items: center; gap: 16px;
+}
+.goal-icon { font-size: 1.6rem; flex-shrink: 0; }
+.goal-content { flex: 1; }
+.goal-title { font-size: 0.88rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.goal-bar-track { height: 8px; background: var(--bg4); border-radius: 8px; overflow: hidden; }
+.goal-bar-fill { height: 100%; border-radius: 8px; background: linear-gradient(90deg, var(--green), #34d399); }
+.goal-meta { display: flex; justify-content: space-between; margin-top: 5px; }
+.goal-pct { font-size: 0.7rem; font-weight: 700; color: var(--green); }
+.goal-deadline { font-size: 0.7rem; color: var(--text3); }
+.affirmation-card {
+  background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(236,72,153,0.15));
+  border: 1px solid rgba(167,139,250,0.3);
+  border-radius: 16px; padding: 24px; text-align: center; margin-top: 28px;
+}
+.affirmation-text { font-size: 1.1rem; font-weight: 600; color: var(--text); line-height: 1.6; font-style: italic; }
+.affirmation-author { font-size: 0.75rem; color: var(--accent2); margin-top: 10px; font-weight: 600; }
+
+/* ===== EDITABLE FIELDS ===== */
+[contenteditable] {
+  outline: none; border-radius: 6px;
+  transition: background 0.2s;
+}
+[contenteditable]:hover { background: rgba(124,58,237,0.06); }
+[contenteditable]:focus { background: rgba(124,58,237,0.1); }
+.edit-hint {
+  display: inline-block; font-size: 0.65rem; color: var(--text3);
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 4px; padding: 2px 6px; margin-left: 6px; vertical-align: middle;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .grid-2, .grid-3, .about-layout, .skills-layout { grid-template-columns: 1fr; }
+  .habits-grid { grid-template-columns: 1fr; }
+  nav { padding: 0 16px; }
+  .nav-links { display: none; }
+  .hero-name { font-size: 2.2rem; }
+  .container { padding: 32px 16px; }
+}
+
+/* ===== MISC ===== */
+.divider { height: 1px; background: var(--border); margin: 32px 0; }
+.tag {
+  display: inline-block; background: rgba(124,58,237,0.15);
+  color: var(--accent2); font-size: 0.65rem; padding: 3px 9px;
+  border-radius: 20px; font-weight: 600; border: 1px solid rgba(124,58,237,0.3);
+  margin: 2px;
+}
+.month-label { font-size: 0.8rem; color: var(--text3); font-weight: 600; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">⚡ STEP-UP</div>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="goTo('home')">Home</button>
+    <button class="nav-link" onclick="goTo('about')">About</button>
+    <button class="nav-link" onclick="goTo('education')">Education</button>
+    <button class="nav-link" onclick="goTo('growth')">Growth</button>
+    <button class="nav-link" onclick="goTo('skills')">Skills</button>
+    <button class="nav-link" onclick="goTo('goals')">Goals</button>
+  </div>
+  <div class="nav-right">
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️ Light</button>
+  </div>
+</nav>
+
+<!-- ===== PAGE: HOME ===== -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-photo-wrapper">
+      <img src="" id="hero-img" class="hero-photo" style="display:none" alt="MR Sisodiya">
+      <div class="hero-photo-placeholder" id="hero-placeholder">M</div>
+      <button class="photo-upload-btn" onclick="document.getElementById('photo-input').click()" title="Upload your photo">📷</button>
+      <input type="file" id="photo-input" accept="image/*" onchange="uploadPhoto(event)">
+    </div>
+    <div class="status-badge"><span class="status-dot"></span> Growing Every Day</div>
+    <h1 class="hero-name" contenteditable="true" spellcheck="false">MR Sisodiya</h1>
+    <p class="hero-role" contenteditable="true" spellcheck="false">Building Habits · Expanding Mind · Leveling Up Daily</p>
+    <p class="hero-bio" contenteditable="true" spellcheck="false">
+      On a mission to grow — mentally, physically, and professionally. Every day is a chance to be 1% better than yesterday.
+    </p>
+    <div class="stats-row" id="stats-row">
+      <div class="stat-card">
+        <div class="stat-val" id="hero-streak">🔥 0</div>
+        <div class="stat-lbl">Day Streak</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="hero-today">0%</div>
+        <div class="stat-lbl">Today's Habits</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="hero-habits">20</div>
+        <div class="stat-lbl">Active Habits</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">↑ 6</div>
+        <div class="stat-lbl">Skills Growing</div>
+      </div>
+    </div>
+    <div class="cta-row">
+      <button class="btn-primary" onclick="goTo('growth')">View My Growth →</button>
+      <button class="btn-secondary" onclick="goTo('about')">About Me</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: ABOUT ===== -->
+<div class="page" id="page-about">
+  <div class="container">
+    <h2 class="section-title">About Me</h2>
+    <p class="section-sub">Who I am beyond the numbers <span class="edit-hint">✏️ click to edit</span></p>
+    <div class="about-layout">
+      <div class="about-photo-section">
+        <div style="position:relative">
+          <img src="" id="about-img" class="about-photo" style="display:none" alt="">
+          <div class="about-photo-placeholder" id="about-placeholder">😊</div>
+        </div>
+        <div class="trait-chips">
+          <span class="trait-chip">🎯 Goal-Oriented</span>
+          <span class="trait-chip">📚 Lifelong Learner</span>
+          <span class="trait-chip">🧘 Mindful</span>
+          <span class="trait-chip">💪 Disciplined</span>
+          <span class="trait-chip">🤝 Team Player</span>
+          <span class="trait-chip">🚀 Ambitious</span>
+        </div>
+      </div>
+      <div class="about-content">
+        <div class="card">
+          <h3 style="font-size:0.75rem;color:var(--accent2);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;font-weight:700">MY STORY</h3>
+          <p class="about-bio" contenteditable="true" spellcheck="false">
+            I'm someone who believes that growth is a daily choice. My journey started with small habits — reading a page, meditating for 5 minutes, writing down my goals. Over time, those small actions compounded into real transformation.
+
+            I'm passionate about building systems that make self-improvement automatic, not accidental. This website is my living record of that journey.
+
+            Every section here updates as I grow. It's not a resume — it's a reflection of who I'm becoming.
+          </p>
+        </div>
+        <div class="values-grid">
+          <div class="value-card">
+            <div class="value-icon">🔥</div>
+            <div class="value-title" contenteditable="true">Consistency Over Perfection</div>
+            <div class="value-desc" contenteditable="true">Show up every day, even imperfectly</div>
+          </div>
+          <div class="value-card">
+            <div class="value-icon">🧠</div>
+            <div class="value-title" contenteditable="true">Mental Clarity First</div>
+            <div class="value-desc" contenteditable="true">Meditate, journal, then execute</div>
+          </div>
+          <div class="value-card">
+            <div class="value-icon">📖</div>
+            <div class="value-title" contenteditable="true">Learn Before You Earn</div>
+            <div class="value-desc" contenteditable="true">Knowledge compounds faster than money</div>
+          </div>
+          <div class="value-card">
+            <div class="value-icon">💬</div>
+            <div class="value-title" contenteditable="true">Honest Reflection</div>
+            <div class="value-desc" contenteditable="true">Track what you do, not what you wish</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:0.75rem;color:var(--accent2);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;font-weight:700">FUN FACTS</h3>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;gap:12px;align-items:center">
+              <span style="font-size:1.2rem">🏀</span>
+              <span class="about-bio" contenteditable="true">Lakers fan (#24 Kobe forever)</span>
+            </div>
+            <div style="display:flex;gap:12px;align-items:center">
+              <span style="font-size:1.2rem">🌆</span>
+              <span class="about-bio" contenteditable="true">Based in Bangalore — city of builders</span>
+            </div>
+            <div style="display:flex;gap:12px;align-items:center">
+              <span style="font-size:1.2rem">📱</span>
+              <span class="about-bio" contenteditable="true">Working at Novata on ESG data solutions</span>
+            </div>
+            <div style="display:flex;gap:12px;align-items:center">
+              <span style="font-size:1.2rem">⏰</span>
+              <span class="about-bio" contenteditable="true">Morning person — best ideas before 9am</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: EDUCATION ===== -->
+<div class="page" id="page-education">
+  <div class="container">
+    <h2 class="section-title">Education</h2>
+    <p class="section-sub">My academic journey and continuous learning path <span class="edit-hint">✏️ click to edit</span></p>
+    <div class="grid-2">
+      <div>
+        <h3 style="font-size:0.8rem;color:var(--accent2);text-transform:uppercase;letter-spacing:1px;margin-bottom:24px;font-weight:700">ACADEMIC TIMELINE</h3>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-year" contenteditable="true">2020 – 2024</div>
+            <div class="timeline-title" contenteditable="true">Bachelor of Technology</div>
+            <div class="timeline-sub" contenteditable="true">Computer Science · Your University Name</div>
+            <div class="timeline-desc" contenteditable="true">Key focus areas: Data Structures, Algorithms, Web Development, and System Design. Graduated with strong foundation in software engineering principles.</div>
+            <div style="margin-top:8px">
+              <span class="tag">Computer Science</span>
+              <span class="tag">Engineering</span>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background:var(--accent3);box-shadow:0 0 0 2px var(--accent3)"></div>
+            <div class="timeline-year" contenteditable="true">2018 – 2020</div>
+            <div class="timeline-title" contenteditable="true">Higher Secondary (12th)</div>
+            <div class="timeline-sub" contenteditable="true">Science Stream · Your School Name</div>
+            <div class="timeline-desc" contenteditable="true">Physics, Chemistry, Mathematics & Computer Science. Built strong analytical thinking and problem-solving skills.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background:var(--orange);box-shadow:0 0 0 2px var(--orange)"></div>
+            <div class="timeline-year" contenteditable="true">Before 2018</div>
+            <div class="timeline-title" contenteditable="true">Secondary Education (10th)</div>
+            <div class="timeline-sub" contenteditable="true">Your School Name</div>
+            <div class="timeline-desc" contenteditable="true">Strong academic foundation. Developed curiosity and love for learning.</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-size:0.8rem;color:var(--accent2);text-transform:uppercase;letter-spacing:1px;margin-bottom:24px;font-weight:700">COURSES & CERTIFICATIONS</h3>
+        <div style="display:flex;flex-direction:column;gap:12px" id="certs-list">
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:start">
+              <div>
+                <div style="font-size:0.88rem;font-weight:700;color:var(--text)" contenteditable="true">Add Your Course Name</div>
+                <div style="font-size:0.75rem;color:var(--text3);margin-top:3px" contenteditable="true">Platform Name · 2024</div>
+              </div>
+              <span style="font-size:1.2rem">🏅</span>
+            </div>
+            <div style="margin-top:8px"><span class="tag">Completed ✓</span></div>
+          </div>
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:start">
+              <div>
+                <div style="font-size:0.88rem;font-weight:700;color:var(--text)" contenteditable="true">Add Another Course</div>
+                <div style="font-size:0.75rem;color:var(--text3);margin-top:3px" contenteditable="true">Platform Name · 2023</div>
+              </div>
+              <span style="font-size:1.2rem">📜</span>
+            </div>
+            <div style="margin-top:8px"><span class="tag">Completed ✓</span></div>
+          </div>
+          <div class="card" style="border-style:dashed;border-color:var(--accent2);background:rgba(124,58,237,0.04)">
+            <div style="display:flex;justify-content:space-between;align-items:start">
+              <div>
+                <div style="font-size:0.88rem;font-weight:700;color:var(--accent2)" contenteditable="true">Currently Studying...</div>
+                <div style="font-size:0.75rem;color:var(--text3);margin-top:3px" contenteditable="true">Platform · In Progress</div>
+              </div>
+              <span style="font-size:1.2rem">📚</span>
+            </div>
+            <div style="margin-top:10px">
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" style="width:60%;background:linear-gradient(90deg,var(--orange),#fbbf24)"></div>
+              </div>
+              <div style="font-size:0.68rem;color:var(--orange);margin-top:5px;font-weight:700">60% complete</div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+          <h3 style="font-size:0.8rem;color:var(--accent2);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;font-weight:700">🎯 TARGET CERTIFICATIONS — KUBERNETES</h3>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div class="card" style="border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.04)">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div>
+                  <div style="font-size:0.88rem;font-weight:700;color:var(--text)">KCNA — Kubernetes & Cloud Native Associate</div>
+                  <div style="font-size:0.72rem;color:var(--text3);margin-top:3px">CNCF · Foundation Level</div>
+                </div>
+                <span style="font-size:1.1rem;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);color:var(--orange);border-radius:8px;padding:3px 10px;font-size:0.68rem;font-weight:700;white-space:nowrap">⏳ Pending</span>
+              </div>
+            </div>
+            <div class="card" style="border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.04)">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div>
+                  <div style="font-size:0.88rem;font-weight:700;color:var(--text)">KCSA — Kubernetes & Cloud Native Security Associate</div>
+                  <div style="font-size:0.72rem;color:var(--text3);margin-top:3px">CNCF · Associate Level</div>
+                </div>
+                <span style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);color:var(--orange);border-radius:8px;padding:3px 10px;font-size:0.68rem;font-weight:700;white-space:nowrap">⏳ Pending</span>
+              </div>
+            </div>
+            <div class="card" style="border-color:rgba(59,130,246,0.4);background:rgba(59,130,246,0.04)">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div>
+                  <div style="font-size:0.88rem;font-weight:700;color:var(--text)">CKAD — Certified Kubernetes Application Developer</div>
+                  <div style="font-size:0.72rem;color:var(--text3);margin-top:3px">CNCF · Professional Level</div>
+                </div>
+                <span style="background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);color:var(--blue);border-radius:8px;padding:3px 10px;font-size:0.68rem;font-weight:700;white-space:nowrap">⏳ Pending</span>
+              </div>
+            </div>
+            <div class="card" style="border-color:rgba(59,130,246,0.4);background:rgba(59,130,246,0.04)">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div>
+                  <div style="font-size:0.88rem;font-weight:700;color:var(--text)">CKA — Certified Kubernetes Administrator</div>
+                  <div style="font-size:0.72rem;color:var(--text3);margin-top:3px">CNCF · Professional Level</div>
+                </div>
+                <span style="background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);color:var(--blue);border-radius:8px;padding:3px 10px;font-size:0.68rem;font-weight:700;white-space:nowrap">⏳ Pending</span>
+              </div>
+            </div>
+            <div class="card" style="border-color:rgba(124,58,237,0.4);background:rgba(124,58,237,0.04)">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div>
+                  <div style="font-size:0.88rem;font-weight:700;color:var(--text)">CKS — Certified Kubernetes Security Specialist</div>
+                  <div style="font-size:0.72rem;color:var(--text3);margin-top:3px">CNCF · Expert Level · Requires CKA first</div>
+                </div>
+                <span style="background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);color:var(--accent2);border-radius:8px;padding:3px 10px;font-size:0.68rem;font-weight:700;white-space:nowrap">⏳ Pending</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="card" style="background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(236,72,153,0.08))">
+          <h3 style="font-size:0.78rem;color:var(--accent2);font-weight:700;margin-bottom:12px">🔑 KEY LEARNINGS FROM EDUCATION</h3>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="font-size:0.82rem;color:var(--text2)" contenteditable="true">• Consistency in learning matters more than intelligence</div>
+            <div style="font-size:0.82rem;color:var(--text2)" contenteditable="true">• First principles thinking solves any problem</div>
+            <div style="font-size:0.82rem;color:var(--text2)" contenteditable="true">• Communication is a skill you build, not a talent you have</div>
+            <div style="font-size:0.82rem;color:var(--text2)" contenteditable="true">• Add your own learnings here...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: GROWTH DASHBOARD ===== -->
+<div class="page" id="page-growth">
+  <div class="container">
+    <h2 class="section-title">Growth Dashboard</h2>
+    <p class="section-sub">Daily habits tracker — check off your wins, watch your streaks grow</p>
+
+    <div class="grid-2" style="margin-bottom:28px">
+      <!-- Progress Ring -->
+      <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px">
+        <canvas id="ringChart" width="180" height="180" style="max-width:180px"></canvas>
+        <div class="ring-label" style="margin-top:16px">
+          <div class="ring-pct" id="ring-pct">0%</div>
+          <div class="ring-sub">habits completed today</div>
+          <div style="font-size:0.75rem;color:var(--text3);margin-top:6px" id="ring-count">0 / 20 done</div>
+        </div>
+      </div>
+      <!-- Weekly Bar Chart -->
+      <div class="card">
+        <h3 style="font-size:0.78rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:16px">WEEKLY OVERVIEW</h3>
+        <div class="chart-container">
+          <canvas id="weekChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Habit List -->
+    <div class="card">
+      <div class="habit-header">
+        <h3 style="font-size:1rem;font-weight:700;color:var(--text)">Today's Habits <span style="color:var(--text3);font-weight:400;font-size:0.8rem" id="today-date"></span></h3>
+        <div style="display:flex;gap:8px">
+          <button onclick="checkAll(true)" style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:var(--green);border-radius:8px;padding:6px 14px;font-size:0.75rem;font-weight:700">✓ All Done</button>
+          <button onclick="checkAll(false)" style="background:var(--bg3);border:1px solid var(--border);color:var(--text3);border-radius:8px;padding:6px 14px;font-size:0.75rem;font-weight:700">Reset</button>
+        </div>
+      </div>
+      <div class="habits-grid" id="habits-grid"></div>
+      <div class="add-habit-row">
+        <input class="habit-input" type="text" id="new-habit" placeholder="+ Add a new habit..." onkeydown="if(event.key==='Enter')addHabit()">
+        <button class="add-habit-btn" onclick="addHabit()">Add</button>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Monthly chart -->
+    <div class="card">
+      <h3 style="font-size:0.78rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:16px">MONTHLY TREND — JUNE 2026</h3>
+      <div class="chart-container" style="height:180px">
+        <canvas id="monthChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: SKILLS ===== -->
+<div class="page" id="page-skills">
+  <div class="container">
+    <h2 class="section-title">Skills & Abilities</h2>
+    <p class="section-sub">Technical, mental & personal skills — updated as I grow <span class="edit-hint">✏️ click bars to edit %</span></p>
+    <div class="skills-layout">
+      <div>
+        <div class="skill-tabs">
+          <button class="skill-tab active" onclick="switchTab('technical',this)">💻 Technical</button>
+          <button class="skill-tab" onclick="switchTab('devops',this)">☁️ Cloud & DevOps</button>
+          <button class="skill-tab" onclick="switchTab('mental',this)">🧠 Mental</button>
+          <button class="skill-tab" onclick="switchTab('problemsolving',this)">🎯 Problem Solving</button>
+          <button class="skill-tab" onclick="switchTab('business',this)">💼 Business</button>
+          <button class="skill-tab" onclick="switchTab('physical',this)">💪 Physical</button>
+        </div>
+        <div class="skill-panel active" id="panel-technical">
+          <div id="bars-technical"></div>
+        </div>
+        <div class="skill-panel" id="panel-devops">
+          <div id="bars-devops"></div>
+        </div>
+        <div class="skill-panel" id="panel-mental">
+          <div id="bars-mental"></div>
+        </div>
+        <div class="skill-panel" id="panel-problemsolving">
+          <div id="bars-problemsolving"></div>
+        </div>
+        <div class="skill-panel" id="panel-business">
+          <div id="bars-business"></div>
+        </div>
+        <div class="skill-panel" id="panel-physical">
+          <div id="bars-physical"></div>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-size:0.78rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:16px">ABILITY RADAR</h3>
+        <div class="radar-container">
+          <canvas id="radarChart"></canvas>
+        </div>
+        <div class="card" style="margin-top:16px;background:linear-gradient(135deg,rgba(124,58,237,0.06),rgba(236,72,153,0.06))">
+          <h3 style="font-size:0.78rem;color:var(--accent2);font-weight:700;margin-bottom:10px">🚀 Currently Building</h3>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="font-size:0.82rem;color:var(--text2)" contenteditable="true">• System Design & Architecture</div>
+            <div style="font-size:0.82rem;color:var(--text2)" contenteditable="true">• Advanced SQL & Data Analysis</div>
+            <div style="font-size:0.82rem;color:var(--text2)" contenteditable="true">• Public Speaking & Communication</div>
+            <div style="font-size:0.82rem;color:var(--text2)" contenteditable="true">• Add your skills here...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: GOALS ===== -->
+<div class="page" id="page-goals">
+  <div class="container">
+    <h2 class="section-title">Goals & Vision</h2>
+    <p class="section-sub">Where I'm headed — tracked, honest, and updated <span class="edit-hint">✏️ click to edit</span></p>
+    <div class="grid-2" style="gap:32px">
+      <div>
+        <h3 style="font-size:0.8rem;color:var(--accent2);text-transform:uppercase;letter-spacing:1px;margin-bottom:20px;font-weight:700">2026 GOALS</h3>
+        <div class="goals-grid" id="goals-list"></div>
+        <button onclick="addGoal()" style="margin-top:16px;background:rgba(124,58,237,0.12);border:1px dashed rgba(124,58,237,0.4);color:var(--accent2);border-radius:12px;padding:12px 20px;font-size:0.8rem;font-weight:700;width:100%">+ Add New Goal</button>
+      </div>
+      <div>
+        <h3 style="font-size:0.8rem;color:var(--accent2);text-transform:uppercase;letter-spacing:1px;margin-bottom:20px;font-weight:700">5-YEAR VISION</h3>
+        <div class="card" style="margin-bottom:16px">
+          <div style="font-size:0.78rem;color:var(--text3);font-weight:700;margin-bottom:10px">CAREER</div>
+          <p class="about-bio" contenteditable="true">Lead impactful projects that merge technology and purpose. Build systems that create real value at scale.</p>
+        </div>
+        <div class="card" style="margin-bottom:16px">
+          <div style="font-size:0.78rem;color:var(--text3);font-weight:700;margin-bottom:10px">PERSONAL</div>
+          <p class="about-bio" contenteditable="true">Become the most disciplined, mentally strong version of myself. Build unbreakable daily habits that run on autopilot.</p>
+        </div>
+        <div class="card">
+          <div style="font-size:0.78rem;color:var(--text3);font-weight:700;margin-bottom:10px">FINANCIAL</div>
+          <p class="about-bio" contenteditable="true">Financial independence through smart work, investing, and multiple income streams. Security for family and freedom for self.</p>
+        </div>
+        <div class="affirmation-card">
+          <div class="affirmation-text" contenteditable="true" id="affirmation-text">"I am becoming the person I need to be to achieve the life I want to live."</div>
+          <div class="affirmation-author">— My Daily Affirmation</div>
+          <button onclick="nextAffirmation()" style="background:rgba(124,58,237,0.15);color:var(--accent2);border:1px solid rgba(124,58,237,0.3);border-radius:20px;padding:5px 14px;font-size:0.72rem;font-weight:700;margin-top:14px">Next Affirmation →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== STATE =====
+const HABITS_KEY = 'stepup_habits';
+const CHECKED_KEY = 'stepup_checked_';
+const GOALS_KEY = 'stepup_goals';
+const PHOTO_KEY = 'stepup_photo';
+const THEME_KEY = 'stepup_theme';
+
+let habits = JSON.parse(localStorage.getItem(HABITS_KEY) || 'null') || [
+  { name: 'Complete assignments', streak: 3 },
+  { name: 'Read 10 pages of a book', streak: 5 },
+  { name: 'Exercise for 30 minutes', streak: 7 },
+  { name: 'Drink 8 glasses of water', streak: 2 },
+  { name: 'Plan next day\'s schedule', streak: 10 },
+  { name: 'Meditate for 10 minutes', streak: 4 },
+  { name: 'Check emails and updates', streak: 6 },
+  { name: 'Practice language skills', streak: 1 },
+  { name: 'Write in a journal', streak: 8 },
+  { name: 'Solve 3 practice problems', streak: 3 },
+  { name: 'Watch an educational video', streak: 5 },
+  { name: 'Update to-do list', streak: 9 },
+  { name: 'Take a 15-minute walk', streak: 2 },
+  { name: 'Get at least 7 hours of sleep', streak: 6 },
+  { name: 'Organize digital files', streak: 1 },
+  { name: 'Organize study desk', streak: 7 },
+];
+
+let goals = JSON.parse(localStorage.getItem(GOALS_KEY) || 'null') || [
+  { icon: '🏋️', title: 'Exercise every day for 90 days', pct: 35, deadline: 'Sep 2026' },
+  { icon: '📚', title: 'Read 12 books this year', pct: 50, deadline: 'Dec 2026' },
+  { icon: '🧘', title: 'Meditate 10 min daily — no breaks', pct: 60, deadline: 'Dec 2026' },
+  { icon: '💻', title: 'Complete 2 major projects', pct: 40, deadline: 'Oct 2026' },
+  { icon: '✍️', title: 'Journal every single day', pct: 75, deadline: 'Dec 2026' },
+  { icon: '🌍', title: 'Learn a new language — A2 level', pct: 20, deadline: 'Dec 2026' },
+];
+
+const skills = {
+  technical: [
+    { name: 'Python / Data', pct: 75 },
+    { name: 'SQL & Databases', pct: 70 },
+    { name: 'Web Development', pct: 65 },
+    { name: 'System Design', pct: 55 },
+    { name: 'APIs & Integrations', pct: 72 },
+    { name: 'Linux', pct: 78 },
+  ],
+  devops: [
+    { name: 'Kubernetes', pct: 70 },
+    { name: 'Docker', pct: 80 },
+    { name: 'AWS', pct: 65 },
+    { name: 'Azure', pct: 55 },
+    { name: 'GCP', pct: 50 },
+    { name: 'DigitalOcean', pct: 68 },
+    { name: 'Hetzner', pct: 60 },
+    { name: 'GitHub Actions', pct: 75 },
+    { name: 'Jenkins', pct: 65 },
+    { name: 'Prometheus & Grafana', pct: 70 },
+    { name: 'Datadog', pct: 60 },
+    { name: 'Databases (Postgres / MySQL / Redis)', pct: 72 },
+  ],
+  mental: [
+    { name: 'Focus & Deep Work', pct: 80 },
+    { name: 'Emotional Intelligence', pct: 70 },
+    { name: 'Resilience', pct: 75 },
+    { name: 'Mindfulness', pct: 65 },
+    { name: 'Critical Thinking', pct: 78 },
+    { name: 'Learning Speed', pct: 82 },
+  ],
+  problemsolving: [
+    { name: 'Analytical Thinking', pct: 85 },
+    { name: 'Debugging & Root Cause Analysis', pct: 80 },
+    { name: 'System Troubleshooting', pct: 78 },
+    { name: 'Algorithm & Data Structures', pct: 70 },
+    { name: 'Creative Problem Solving', pct: 75 },
+    { name: 'Decision Making Under Pressure', pct: 72 },
+  ],
+  business: [
+    { name: 'Marketing', pct: 60 },
+    { name: 'Sales', pct: 55 },
+    { name: 'Public Speaking', pct: 50 },
+    { name: 'Negotiation', pct: 58 },
+    { name: 'Stakeholder Communication', pct: 70 },
+    { name: 'Strategic Thinking', pct: 65 },
+  ],
+  physical: [
+    { name: 'Overall Fitness', pct: 60 },
+    { name: 'Endurance', pct: 55 },
+    { name: 'Sleep Quality', pct: 70 },
+    { name: 'Nutrition', pct: 65 },
+    { name: 'Strength', pct: 50 },
+    { name: 'Energy Levels', pct: 72 },
+  ],
+};
+
+const affirmations = [
+  '"I am becoming the person I need to be to achieve the life I want to live."',
+  '"Every day I wake up is a chance to level up."',
+  '"Small habits, compounded daily, create extraordinary results."',
+  '"I don\'t just have goals — I build systems that make them inevitable."',
+  '"My discipline is stronger than my excuses."',
+  '"I am consistent, focused, and always improving."',
+];
+let affIdx = 0;
+
+// ===== THEME =====
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌑 Dark' : '☀️ Light';
+  localStorage.setItem(THEME_KEY, isDark ? 'light' : 'dark');
+  rebuildCharts();
+}
+
+// ===== NAVIGATION =====
+function goTo(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  const links = document.querySelectorAll('.nav-link');
+  const pages = ['home','about','education','growth','skills','goals'];
+  links[pages.indexOf(page)]?.classList.add('active');
+  window.scrollTo(0, 0);
+  if (page === 'growth') initGrowthCharts();
+  if (page === 'skills') initSkillCharts();
+}
+
+// ===== PHOTO UPLOAD =====
+function uploadPhoto(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const src = e.target.result;
+    localStorage.setItem(PHOTO_KEY, src);
+    applyPhoto(src);
+  };
+  reader.readAsDataURL(file);
+}
+function applyPhoto(src) {
+  const heroImg = document.getElementById('hero-img');
+  const heroPlaceholder = document.getElementById('hero-placeholder');
+  const aboutImg = document.getElementById('about-img');
+  const aboutPlaceholder = document.getElementById('about-placeholder');
+  heroImg.src = src; heroImg.style.display = '';
+  heroPlaceholder.style.display = 'none';
+  aboutImg.src = src; aboutImg.style.display = '';
+  aboutPlaceholder.style.display = 'none';
+}
+
+// ===== HABITS =====
+function todayKey() {
+  return CHECKED_KEY + new Date().toDateString();
+}
+function getChecked() {
+  return JSON.parse(localStorage.getItem(todayKey()) || '[]');
+}
+function saveChecked(arr) {
+  localStorage.setItem(todayKey(), JSON.stringify(arr));
+}
+
+function renderHabits() {
+  const grid = document.getElementById('habits-grid');
+  const checked = getChecked();
+  grid.innerHTML = '';
+  habits.forEach((h, i) => {
+    const done = checked.includes(i);
+    const div = document.createElement('div');
+    div.className = 'habit-item' + (done ? ' done' : '');
+    div.innerHTML = `
+      <div class="habit-checkbox">${done ? '✓' : ''}</div>
+      <span class="habit-name">${h.name}</span>
+      ${h.streak > 0 ? `<span class="habit-streak">🔥${h.streak}</span>` : ''}
+    `;
+    div.onclick = () => toggleHabit(i);
+    grid.appendChild(div);
+  });
+  updateProgress();
+}
+
+function toggleHabit(i) {
+  const checked = getChecked();
+  const idx = checked.indexOf(i);
+  if (idx >= 0) checked.splice(idx, 1); else checked.push(i);
+  saveChecked(checked);
+  renderHabits();
+  updateRingChart();
+  updateHeroStats();
+}
+
+function checkAll(val) {
+  if (val) saveChecked(habits.map((_,i) => i));
+  else saveChecked([]);
+  renderHabits();
+  updateRingChart();
+  updateHeroStats();
+}
+
+function addHabit() {
+  const input = document.getElementById('new-habit');
+  const name = input.value.trim();
+  if (!name) return;
+  habits.push({ name, streak: 0 });
+  localStorage.setItem(HABITS_KEY, JSON.stringify(habits));
+  input.value = '';
+  renderHabits();
+  updateHeroStats();
+}
+
+function updateProgress() {
+  const checked = getChecked().length;
+  const total = habits.length;
+  const pct = total ? Math.round(checked / total * 100) : 0;
+  document.getElementById('ring-pct').textContent = pct + '%';
+  document.getElementById('ring-count').textContent = `${checked} / ${total} done`;
+  document.getElementById('today-date').textContent = '· ' + new Date().toLocaleDateString('en-IN', {weekday:'long',day:'numeric',month:'long'});
+}
+
+function updateHeroStats() {
+  const checked = getChecked().length;
+  const total = habits.length;
+  const pct = total ? Math.round(checked / total * 100) : 0;
+  document.getElementById('hero-today').textContent = pct + '%';
+  document.getElementById('hero-habits').textContent = total;
+  // Simple streak from localStorage
+  let streak = 0;
+  const today = new Date();
+  for (let d = 0; d < 365; d++) {
+    const day = new Date(today); day.setDate(day.getDate() - d);
+    const key = CHECKED_KEY + day.toDateString();
+    const arr = JSON.parse(localStorage.getItem(key) || '[]');
+    if (arr.length > 0) streak++; else if (d > 0) break;
+  }
+  document.getElementById('hero-streak').textContent = '🔥 ' + streak;
+}
+
+// ===== CHARTS =====
+let ringChart, weekChart, monthChart, radarChart;
+
+function getChartColors() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  return {
+    grid: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
+    text: isDark ? '#b0b0cc' : '#4a4a6a',
+  };
+}
+
+function initGrowthCharts() {
+  const c = getChartColors();
+  // Ring
+  const ringCanvas = document.getElementById('ringChart');
+  if (ringChart) ringChart.destroy();
+  const checked = getChecked().length;
+  const total = habits.length;
+  const pct = total ? Math.round(checked / total * 100) : 0;
+  ringChart = new Chart(ringCanvas, {
+    type: 'doughnut',
+    data: {
+      datasets: [{
+        data: [checked, total - checked],
+        backgroundColor: ['#7c3aed', 'rgba(124,58,237,0.1)'],
+        borderWidth: 0, borderRadius: 8,
+      }]
+    },
+    options: { cutout: '78%', plugins: { legend: { display: false }, tooltip: { enabled: false } }, animation: { duration: 800 } }
+  });
+
+  // Week chart (simulated past 7 days)
+  const weekCanvas = document.getElementById('weekChart');
+  if (weekChart) weekChart.destroy();
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const today = new Date();
+  const weekData = days.map((_, i) => {
+    const d = new Date(today); d.setDate(d.getDate() - (6 - i));
+    const key = CHECKED_KEY + d.toDateString();
+    const arr = JSON.parse(localStorage.getItem(key) || '[]');
+    return arr.length;
+  });
+  weekChart = new Chart(weekCanvas, {
+    type: 'bar',
+    data: {
+      labels: days,
+      datasets: [{
+        data: weekData,
+        backgroundColor: weekData.map((v,i) => i === 6 ? '#7c3aed' : 'rgba(124,58,237,0.35)'),
+        borderRadius: 8, borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: c.grid }, ticks: { color: c.text, font: { size: 11 } } },
+        y: { grid: { color: c.grid }, ticks: { color: c.text, font: { size: 11 } }, max: habits.length, beginAtZero: true }
+      }
+    }
+  });
+
+  // Month chart
+  const monthCanvas = document.getElementById('monthChart');
+  if (monthChart) monthChart.destroy();
+  const monthData = Array.from({length: 20}, (_, i) => Math.floor(Math.random() * (habits.length - 8) + 8));
+  monthChart = new Chart(monthCanvas, {
+    type: 'line',
+    data: {
+      labels: Array.from({length: 20}, (_, i) => `Jun ${i + 1}`),
+      datasets: [{
+        data: monthData,
+        borderColor: '#a78bfa', backgroundColor: 'rgba(167,139,250,0.1)',
+        borderWidth: 2, pointRadius: 3, tension: 0.4, fill: true,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: c.grid }, ticks: { color: c.text, font: { size: 10 }, maxTicksLimit: 10 } },
+        y: { grid: { color: c.grid }, ticks: { color: c.text, font: { size: 10 } }, beginAtZero: true, max: habits.length }
+      }
+    }
+  });
+
+  updateProgress();
+  updateRingChart();
+}
+
+function updateRingChart() {
+  if (!ringChart) return;
+  const checked = getChecked().length;
+  const total = habits.length;
+  ringChart.data.datasets[0].data = [checked, total - checked];
+  ringChart.update();
+  const pct = total ? Math.round(checked / total * 100) : 0;
+  document.getElementById('ring-pct').textContent = pct + '%';
+  document.getElementById('ring-count').textContent = `${checked} / ${total} done`;
+}
+
+function initSkillCharts() {
+  const c = getChartColors();
+  ['technical','devops','mental','problemsolving','business','physical'].forEach(cat => {
+    const container = document.getElementById('bars-' + cat);
+    if (!container) return;
+    container.innerHTML = '';
+    skills[cat].forEach(s => {
+      container.innerHTML += `
+        <div class="skill-bar-item">
+          <div class="skill-bar-label">
+            <span class="skill-name" contenteditable="true">${s.name}</span>
+            <span class="skill-pct">${s.pct}%</span>
+          </div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" style="width:${s.pct}%"></div>
+          </div>
+        </div>
+      `;
+    });
+  });
+
+  // Radar
+  const radarCanvas = document.getElementById('radarChart');
+  if (radarChart) radarChart.destroy();
+  const avg = cat => Math.round(skills[cat].reduce((a,b) => a + b.pct, 0) / skills[cat].length);
+  radarChart = new Chart(radarCanvas, {
+    type: 'radar',
+    data: {
+      labels: ['Technical', 'Cloud & DevOps', 'Mental', 'Problem Solving', 'Business', 'Physical'],
+      datasets: [{
+        data: [avg('technical'), avg('devops'), avg('mental'), avg('problemsolving'), avg('business'), avg('physical')],
+        backgroundColor: 'rgba(124,58,237,0.2)',
+        borderColor: '#a78bfa',
+        pointBackgroundColor: '#a78bfa',
+        borderWidth: 2, pointRadius: 5,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        r: {
+          min: 0, max: 100,
+          grid: { color: c.grid },
+          angleLines: { color: c.grid },
+          pointLabels: { color: c.text, font: { size: 11, weight: '600' } },
+          ticks: { display: false }
+        }
+      }
+    }
+  });
+}
+
+function rebuildCharts() {
+  const activePage = document.querySelector('.page.active')?.id?.replace('page-','');
+  if (activePage === 'growth') initGrowthCharts();
+  if (activePage === 'skills') initSkillCharts();
+}
+
+// ===== GOALS =====
+function renderGoals() {
+  const list = document.getElementById('goals-list');
+  list.innerHTML = '';
+  goals.forEach((g, i) => {
+    const div = document.createElement('div');
+    div.className = 'goal-item';
+    div.innerHTML = `
+      <div class="goal-icon">${g.icon}</div>
+      <div class="goal-content">
+        <div class="goal-title" contenteditable="true" onblur="goals[${i}].title=this.textContent;saveGoals()">${g.title}</div>
+        <div class="goal-bar-track"><div class="goal-bar-fill" style="width:${g.pct}%"></div></div>
+        <div class="goal-meta">
+          <span class="goal-pct">${g.pct}%</span>
+          <span class="goal-deadline">📅 ${g.deadline}</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <button onclick="changeGoalPct(${i},10)" style="background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.2);border-radius:6px;padding:3px 8px;font-size:0.75rem;font-weight:700">+10%</button>
+        <button onclick="changeGoalPct(${i},-10)" style="background:var(--bg4);color:var(--text3);border:1px solid var(--border);border-radius:6px;padding:3px 8px;font-size:0.75rem">-10%</button>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function changeGoalPct(i, delta) {
+  goals[i].pct = Math.min(100, Math.max(0, goals[i].pct + delta));
+  saveGoals();
+  renderGoals();
+}
+
+function addGoal() {
+  const icon = ['🎯','⭐','🔥','💡','📖','🏃','🌱','💰'][Math.floor(Math.random()*8)];
+  goals.push({ icon, title: 'New Goal — click to edit', pct: 0, deadline: 'Dec 2026' });
+  saveGoals();
+  renderGoals();
+}
+
+function saveGoals() { localStorage.setItem(GOALS_KEY, JSON.stringify(goals)); }
+
+// ===== AFFIRMATIONS =====
+function nextAffirmation() {
+  affIdx = (affIdx + 1) % affirmations.length;
+  document.getElementById('affirmation-text').textContent = affirmations[affIdx];
+}
+
+// ===== TABS =====
+function switchTab(cat, btn) {
+  document.querySelectorAll('.skill-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.skill-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-' + cat).classList.add('active');
+}
+
+// ===== INIT =====
+window.onload = () => {
+  // Restore theme
+  const savedTheme = localStorage.getItem(THEME_KEY) || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  document.getElementById('themeBtn').textContent = savedTheme === 'dark' ? '☀️ Light' : '🌑 Dark';
+
+  // Restore photo
+  const savedPhoto = localStorage.getItem(PHOTO_KEY);
+  if (savedPhoto) applyPhoto(savedPhoto);
+
+  // Render
+  renderHabits();
+  renderGoals();
+  updateHeroStats();
+};
+</script>
+</body>
+</html>
