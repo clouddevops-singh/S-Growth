@@ -1935,12 +1935,159 @@
             margin: 32px 0
         }
 
+        /* ── PROJECTS ── */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 24px;
+            margin-top: 16px;
+        }
+
+        .project-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .project-icon-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .project-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: var(--p2);
+        }
+
+        .project-meta {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--txt);
+        }
+
+        .project-company {
+            font-size: 0.72rem;
+            color: var(--p2);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+
+        .project-date {
+            font-size: 0.68rem;
+            color: var(--txt3);
+            font-weight: 600;
+        }
+
+        .project-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .project-stat-badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-uptime {
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--g1);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+
+        .stat-perf {
+            background: rgba(59, 130, 246, 0.12);
+            color: var(--bl);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+        }
+
+        .stat-cost {
+            background: rgba(245, 158, 11, 0.12);
+            color: var(--or);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+
+        .project-bullets {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .project-bullets li {
+            font-size: 0.78rem;
+            color: var(--txt2);
+            line-height: 1.5;
+            position: relative;
+            padding-left: 14px;
+        }
+
+        .project-bullets li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--p2);
+            font-weight: 700;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            border-top: 1px solid var(--border2);
+            padding-top: 14px;
+            margin-top: auto;
+        }
+
+        .project-tag {
+            font-size: 0.62rem;
+            font-weight: 700;
+            color: var(--txt2);
+            background: var(--glass-b);
+            border: 1px solid var(--border2);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
         /* responsive */
         @media(max-width:900px) {
 
             .about-grid,
             .edu-grid,
             .skills-layout,
+            .projects-grid,
             .grid2 {
                 grid-template-columns: 1fr
             }
@@ -2003,6 +2150,7 @@
             <button class="nav-link active" onclick="goTo('home')">Home</button>
             <button class="nav-link" onclick="goTo('about')">About</button>
             <button class="nav-link" onclick="goTo('education')">Education</button>
+            <button class="nav-link" onclick="goTo('projects')">Projects</button>
             <button class="nav-link" onclick="goTo('growth')">Growth</button>
             <button class="nav-link" onclick="goTo('skills')">Skills</button>
             <button class="nav-link" onclick="goTo('goals')">Goals</button>
@@ -2104,16 +2252,13 @@
                         <div class="section-eyebrow" style="margin-bottom:10px">MY STORY</div>
                         <p class="bio-text" contenteditable="true" spellcheck="false">
                             I believe growth is a system, not a wish. My journey is about building habits the same way I
-                            build
-                            infrastructure — with intention, monitoring, and continuous improvement.
+                            build infrastructure — with intention, monitoring, and continuous improvement. I treat
+                            personal growth like infrastructure: built to last, monitored closely, and always iterating.
                         </p>
                         <p class="bio-text" contenteditable="true" spellcheck="false">
-                            By day I work on cloud-native solutions at Novata in Bangalore. By discipline I track 16
-                            daily habits,
-                            study Kubernetes, and work toward becoming the most complete version of myself.
-                        </p>
-                        <p class="bio-text" contenteditable="true" spellcheck="false">
-                            This website is my living proof-of-work. Not a resume — a reflection.
+                            By day, I engineer cloud-native solutions at Novata. By discipline, I track my daily habits
+                            and obsess over Kubernetes. My goal isn't just to write better code—it's to become a more
+                            complete, effective, and intentional human being, every single day.
                         </p>
                     </div>
                     <div class="values-grid">
@@ -2178,8 +2323,11 @@
                             <div class="tl-dot"></div>
                             <div class="tl-year" contenteditable="true">2017 – 2021</div>
                             <div class="tl-title" contenteditable="true">Bachelor's degree, Engineering</div>
-                            <div class="tl-sub" contenteditable="true">Electronics and Communication Engineering · Nitte Meenakshi Institute of Technology</div>
-                            <div class="tl-desc" contenteditable="true">Systems, networks, signal processing, and engineering electromagnetics. Built a strong analytical foundation for complex engineering and cloud-native work.</div>
+                            <div class="tl-sub" contenteditable="true">Electronics and Communication Engineering · Nitte
+                                Meenakshi Institute of Technology</div>
+                            <div class="tl-desc" contenteditable="true">Systems, networks, signal processing, and
+                                engineering electromagnetics. Built a strong analytical foundation for complex
+                                engineering and cloud-native work.</div>
                             <div style="margin-top:10px"><span class="tag">Electronics &amp; Comm.</span><span
                                     class="tag">Engineering</span>
                             </div>
@@ -2272,6 +2420,174 @@
                                 insight here...
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════
+     PAGE: PROJECTS
+══════════════════════════════════ -->
+    <div class="page" id="page-projects">
+        <div class="container">
+            <div class="section-eyebrow reveal">MY PORTFOLIO</div>
+            <h2 class="section-h reveal d1">Featured <span class="grad-text">Projects</span></h2>
+            <p class="section-sub reveal d2">Designing, building, and automating cloud-native environments for
+                resilience, speed, and cost efficiency.</p>
+
+            <div class="projects-grid">
+                <!-- Kafka Deployment -->
+                <div class="glass card-pad project-card reveal d1">
+                    <div>
+                        <div class="project-header">
+                            <div class="project-icon-title">
+                                <div class="project-icon"
+                                    style="background: rgba(139, 92, 246, 0.12); border-color: rgba(139, 92, 246, 0.2); color: var(--p2);">
+                                    ☸️</div>
+                                <div class="project-meta">
+                                    <h3 class="project-title" contenteditable="true" spellcheck="false">Kafka and Celery
+                                        Core Infrastructure</h3>
+                                    <span class="project-company" contenteditable="true" spellcheck="false">Busigence
+                                        Technologies</span>
+                                </div>
+                            </div>
+                            <span class="project-date" contenteditable="true" spellcheck="false">Oct 2022 - Feb
+                                2023</span>
+                        </div>
+
+                        <div class="project-stats">
+                            <span class="project-stat-badge stat-uptime">⚡ 99.9% Uptime</span>
+                            <span class="project-stat-badge stat-perf">📈 +30% Message Throughput</span>
+                            <span class="project-stat-badge stat-perf">🚀 -40% Deploy Time</span>
+                        </div>
+
+                        <ul class="project-bullets">
+                            <li contenteditable="true" spellcheck="false">Deployed Kafka using Strimzi operator and Helm
+                                to secure container orchestration and ensure 99.9% environment reliability.</li>
+                            <li contenteditable="true" spellcheck="false">Built and deployed optimized producer and
+                                consumer code, improving message throughput by 30%.</li>
+                            <li contenteditable="true" spellcheck="false">Integrated Django with Celery backend to
+                                transition heavy executions async, cutting task runtime by 40%.</li>
+                            <li contenteditable="true" spellcheck="false">Configured Celery Flower monitoring
+                                dashboards, boosting task state visibility and cutting errors by 25%.</li>
+                            <li contenteditable="true" spellcheck="false">Wired RabbitMQ and Redis message brokers to
+                                Celery, achieving a 50% decrease in task processing latency.</li>
+                            <li contenteditable="true" spellcheck="false">Successfully troubleshot Kafka
+                                producer-consumer pipelines, reducing active code bug counts by 20%.</li>
+                        </ul>
+                    </div>
+
+                    <div class="project-tags">
+                        <span class="project-tag">Kafka</span>
+                        <span class="project-tag">Strimzi</span>
+                        <span class="project-tag">Kubernetes</span>
+                        <span class="project-tag">Helm</span>
+                        <span class="project-tag">Celery</span>
+                        <span class="project-tag">Django</span>
+                        <span class="project-tag">Redis</span>
+                        <span class="project-tag">RabbitMQ</span>
+                        <span class="project-tag">Python</span>
+                    </div>
+                </div>
+
+                <!-- Mimir-tempo-loki -->
+                <div class="glass card-pad project-card reveal d2">
+                    <div>
+                        <div class="project-header">
+                            <div class="project-icon-title">
+                                <div class="project-icon"
+                                    style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.2); color: var(--g1);">
+                                    📊</div>
+                                <div class="project-meta">
+                                    <h3 class="project-title" contenteditable="true" spellcheck="false">Mimir-Tempo-Loki
+                                        Observability Stack</h3>
+                                    <span class="project-company" contenteditable="true" spellcheck="false">Busigence
+                                        Technologies</span>
+                                </div>
+                            </div>
+                            <span class="project-date" contenteditable="true" spellcheck="false">Aug 2023 - Feb
+                                2024</span>
+                        </div>
+
+                        <div class="project-stats">
+                            <span class="project-stat-badge stat-uptime">⚡ 99.99% Mimir Uptime</span>
+                            <span class="project-stat-badge stat-cost">💰 -50% Storage Costs</span>
+                            <span class="project-stat-badge stat-perf">🚀 -95% Deploy Time</span>
+                        </div>
+
+                        <ul class="project-bullets">
+                            <li contenteditable="true" spellcheck="false"><strong>Mimir:</strong> Deployed
+                                highly-available Mimir using Helm charts, integrating with Prometheus remote-write to
+                                increase monitoring metrics accuracy by 20%. Secured dashboards with Grafana SSO (-40%
+                                login time).</li>
+                            <li contenteditable="true" spellcheck="false"><strong>Tempo:</strong> Set up Tempo using the
+                                Tempo Kubernetes Operator, slashing deployment provisioning times by 95%. Configured
+                                dedicated storage buckets to cut tracing storage costs by 50%.</li>
+                            <li contenteditable="true" spellcheck="false"><strong>Loki:</strong> Deployed Loki with
+                                Helm, configuring scalable ingress paths to reduce log query latency by 30%. Streamlined
+                                log aggregation to speed up troubleshooting cycle times by 25%.</li>
+                        </ul>
+                    </div>
+
+                    <div class="project-tags">
+                        <span class="project-tag">Mimir</span>
+                        <span class="project-tag">Tempo</span>
+                        <span class="project-tag">Loki</span>
+                        <span class="project-tag">Prometheus</span>
+                        <span class="project-tag">Grafana</span>
+                        <span class="project-tag">Kubernetes Operator</span>
+                        <span class="project-tag">SSO</span>
+                        <span class="project-tag">Helm</span>
+                    </div>
+                </div>
+
+                <!-- Azure App Services -->
+                <div class="glass card-pad project-card reveal d3">
+                    <div>
+                        <div class="project-header">
+                            <div class="project-icon-title">
+                                <div class="project-icon"
+                                    style="background: rgba(59, 130, 246, 0.12); border-color: rgba(59, 130, 246, 0.2); color: var(--bl);">
+                                    ☁️</div>
+                                <div class="project-meta">
+                                    <h3 class="project-title" contenteditable="true" spellcheck="false">Azure
+                                        Application Hosting & Deployment</h3>
+                                    <span class="project-company" contenteditable="true" spellcheck="false">Busigence
+                                        Technologies</span>
+                                </div>
+                            </div>
+                            <span class="project-date" contenteditable="true" spellcheck="false">Jul 2023 - Aug
+                                2023</span>
+                        </div>
+
+                        <div class="project-stats">
+                            <span class="project-stat-badge stat-uptime">⚡ 99.9% Uptime</span>
+                            <span class="project-stat-badge stat-perf">🚀 -40% Deploy Time</span>
+                            <span class="project-stat-badge stat-perf">🎯 +50% Developer Efficiency</span>
+                        </div>
+
+                        <ul class="project-bullets">
+                            <li contenteditable="true" spellcheck="false">Successfully deployed a Node.js Express.js
+                                backend on Azure App Services, establishing full high-availability configuration.</li>
+                            <li contenteditable="true" spellcheck="false">Automated build and deploy pipelines using
+                                Jenkins integration, accelerating application delivery time by 40%.</li>
+                            <li contenteditable="true" spellcheck="false">Engineered precise Azure CLI deploy scripts to
+                                standardize CLI integrations, lowering manual release error rates by 30%.</li>
+                            <li contenteditable="true" spellcheck="false">Created custom Visual Studio Code
+                                configurations and workspace files, increasing developer productivity by 50%.</li>
+                        </ul>
+                    </div>
+
+                    <div class="project-tags">
+                        <span class="project-tag">Azure</span>
+                        <span class="project-tag">App Services</span>
+                        <span class="project-tag">Node.js</span>
+                        <span class="project-tag">Express.js</span>
+                        <span class="project-tag">Jenkins</span>
+                        <span class="project-tag">Azure CLI</span>
+                        <span class="project-tag">CI/CD</span>
+                        <span class="project-tag">VS Code</span>
                     </div>
                 </div>
             </div>
@@ -2871,7 +3187,7 @@
         }
 
         // ─── NAVIGATION ─────────────────────────
-        const PAGES = ['home', 'about', 'education', 'growth', 'skills', 'goals'];
+        const PAGES = ['home', 'about', 'education', 'projects', 'growth', 'skills', 'goals'];
         function goTo(pg) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
