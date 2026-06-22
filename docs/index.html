@@ -2149,7 +2149,7 @@
         <div class="nav-links">
             <button class="nav-link active" onclick="goTo('home')">Home</button>
             <button class="nav-link" onclick="goTo('about')">About</button>
-            <button class="nav-link" onclick="goTo('education')">Education</button>
+            <button class="nav-link" onclick="goTo('career')">Career</button>
             <button class="nav-link" onclick="goTo('projects')">Projects</button>
             <button class="nav-link" onclick="goTo('growth')">Growth</button>
             <button class="nav-link" onclick="goTo('skills')">Skills</button>
@@ -2308,58 +2308,90 @@
     </div>
 
     <!-- ══════════════════════════════════
-     PAGE: EDUCATION
+     PAGE: CAREER
 ══════════════════════════════════ -->
-    <div class="page" id="page-education">
+    <div class="page" id="page-career">
         <div class="container">
-            <div class="section-eyebrow reveal">LEARNING PATH</div>
-            <h2 class="section-h reveal d1">Education & <span class="grad-text">Certifications</span></h2>
-            <p class="section-sub reveal d2">Academic foundation + relentless self-directed learning.</p>
+            <div class="section-eyebrow reveal">JOURNEY & TRACK RECORD</div>
+            <h2 class="section-h reveal d1">Experience & <span class="grad-text">Education</span></h2>
+            <p class="section-sub reveal d2">My professional DevOps career timeline and academic achievements.</p>
             <div class="edu-grid">
+                <!-- LEFT COLUMN: Professional Experience -->
                 <div class="reveal-l">
+                    <div class="section-eyebrow" style="margin-bottom:20px">PROFESSIONAL EXPERIENCE</div>
+                    <div class="timeline">
+                        <div class="tl-item">
+                            <div class="tl-dot" style="background: var(--p1);"></div>
+                            <div class="tl-year" contenteditable="true" spellcheck="false">Feb 2022 - Present</div>
+                            <div class="tl-title" contenteditable="true" spellcheck="false">DevOps Engineer</div>
+                            <div class="tl-sub" contenteditable="true" spellcheck="false">Busigence Technologies · Bengaluru</div>
+                            <div class="tl-desc" style="font-size: 0.76rem; line-height: 1.6; color: var(--txt2); margin-top: 8px;">
+                                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
+                                    <li style="position: relative; padding-left: 14px;"><span style="position: absolute; left: 0; color: var(--p2);">•</span>Orchestrated Kubernetes clusters for container management, scaling, and maintenance, ensuring 99.9% uptime and efficient resource utilization.</li>
+                                    <li style="position: relative; padding-left: 14px;"><span style="position: absolute; left: 0; color: var(--p2);">•</span>Designed and automated CI/CD pipelines using Jenkins, reducing deployment time by 40% and enhancing software delivery processes, while integrating GitHub for version control.</li>
+                                    <li style="position: relative; padding-left: 14px;"><span style="position: absolute; left: 0; color: var(--p2);">•</span>Developed Docker images for diverse applications, optimizing resource usage and enhancing deployment consistency.</li>
+                                    <li style="position: relative; padding-left: 14px;"><span style="position: absolute; left: 0; color: var(--p2);">•</span>Deployed containerized applications on Kubernetes, Docker, AWS, and Azure, leveraging cloud platforms for scalability and flexibility.</li>
+                                    <li style="position: relative; padding-left: 14px;"><span style="position: absolute; left: 0; color: var(--p2);">•</span>Implemented cost optimization strategies on cloud platforms, resulting in a 30% reduction in infrastructure costs.</li>
+                                    <li style="position: relative; padding-left: 14px;"><span style="position: absolute; left: 0; color: var(--p2);">•</span>Configured monitoring tools such as Prometheus, Grafana, and Loki for real-time tracking of application performance and infrastructure health, and incorporated YAML-based configuration for deployments.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="tl-item" style="margin-top: 24px;">
+                            <div class="tl-dot" style="background: var(--p1);"></div>
+                            <div class="tl-year" contenteditable="true" spellcheck="false">Aug 2021 - Jan 2022</div>
+                            <div class="tl-title" contenteditable="true" spellcheck="false">DevOps Engineer</div>
+                            <div class="tl-sub" contenteditable="true" spellcheck="false">Anuta Network · Bengaluru</div>
+                            <div class="tl-desc" style="font-size: 0.76rem; line-height: 1.6; color: var(--txt2); margin-top: 8px;">
+                                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
+                                    <li style="position: relative; padding-left: 14px;"><span style="position: absolute; left: 0; color: var(--p2);">•</span>Administered Amazon EKS clusters, ensuring optimal performance and reliability with 99.9% uptime.</li>
+                                    <li style="position: relative; padding-left: 14px;"><span style="position: absolute; left: 0; color: var(--p2);">•</span>Managed Kubernetes clusters on local environments and AWS, handling provisioning, scaling, monitoring, and troubleshooting tasks, reducing incident response time by 30%.</li>
+                                    <li style="position: relative; padding-left: 14px;"><span style="position: absolute; left: 0; color: var(--p2);">•</span>Utilized automation tools including Jenkins, Docker, Kubernetes, Grafana, Jira, and GitLab, resulting in a 40% increase in deployment frequency and a 25% reduction in manual errors, while integrating GitHub Actions where applicable.</li>
+                                    <li style="position: relative; padding-left: 14px;"><span style="position: absolute; left: 0; color: var(--p2);">•</span>Leveraged shell scripting to automate routine tasks, saving an average of 15 hours per week in manual effort.</li>
+                                    <li style="position: relative; padding-left: 14px;"><span style="position: absolute; left: 0; color: var(--p2);">•</span>Ensured seamless integration of automation tools into DevOps practices, resulting in a 20% increase in team productivity and a 15% reduction in time-to-market.</li>
+                                    <li style="position: relative; padding-left: 14px;"><span style="position: absolute; left: 0; color: var(--p2);">•</span>Conducted optimization and maintenance of EKS clusters, implementing best practices to enhance performance and reliability.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="tl-item" style="margin-top: 24px;">
+                            <div class="tl-dot" style="background: var(--p1);"></div>
+                            <div class="tl-year" contenteditable="true" spellcheck="false">May 2021 - Aug 2021</div>
+                            <div class="tl-title" contenteditable="true" spellcheck="false">DevOps Intern</div>
+                            <div class="tl-sub" contenteditable="true" spellcheck="false">Sirpi · Bengaluru</div>
+                            <div class="tl-desc" style="font-size: 0.76rem; line-height: 1.6; color: var(--txt2); margin-top: 8px;">
+                                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
+                                    <li style="position: relative; padding-left: 14px;"><span style="position: absolute; left: 0; color: var(--p2);">•</span>Dockerized Node.js & Python applications.</li>
+                                    <li style="position: relative; padding-left: 14px;"><span style="position: absolute; left: 0; color: var(--p2);">•</span>Deployed server-less projects on Cloud Run & Cloud Function using CI/CD.</li>
+                                    <li style="position: relative; padding-left: 14px;"><span style="position: absolute; left: 0; color: var(--p2);">•</span>Worked on various cloud platforms including GCP, AWS, Digital-Ocean, and HETZNER.</li>
+                                    <li style="position: relative; padding-left: 14px;"><span style="position: absolute; left: 0; color: var(--p2);">•</span>Managed new user access on Workspace by configuring permissions, roles, and security settings, streamlining the onboarding process and ensuring compliance with company policies.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: Education & Certifications -->
+                <div class="reveal-r">
                     <div class="section-eyebrow" style="margin-bottom:20px">ACADEMIC TIMELINE</div>
                     <div class="timeline">
                         <div class="tl-item">
                             <div class="tl-dot"></div>
-                            <div class="tl-year" contenteditable="true">2017 – 2021</div>
-                            <div class="tl-title" contenteditable="true">Bachelor's degree, Engineering</div>
-                            <div class="tl-sub" contenteditable="true">Electronics and Communication Engineering · Nitte
-                                Meenakshi Institute of Technology</div>
-                            <div class="tl-desc" contenteditable="true">Systems, networks, signal processing, and
-                                engineering electromagnetics. Built a strong analytical foundation for complex
-                                engineering and cloud-native work.</div>
-                            <div style="margin-top:10px"><span class="tag">Electronics &amp; Comm.</span><span
-                                    class="tag">Engineering</span>
+                            <div class="tl-year" contenteditable="true" spellcheck="false">2017 – 2021</div>
+                            <div class="tl-title" contenteditable="true" spellcheck="false">Bachelor of Engineering (ECE)</div>
+                            <div class="tl-sub" contenteditable="true" spellcheck="false">Visvesvaraya Technological University (VTU) · Nitte Meenakshi Institute of Technology · GPA: 7.4</div>
+                            <div class="tl-desc" contenteditable="true" spellcheck="false">Systems, networks, signal processing, and engineering electromagnetics. Built a strong analytical foundation for complex engineering and cloud-native work.</div>
+                            <div style="margin-top:10px">
+                                <span class="tag">ECE</span>
+                                <span class="tag">Engineering</span>
+                                <span class="tag">VTU</span>
                             </div>
                         </div>
                     </div>
-                    <div class="divider"></div>
-                    <div class="section-eyebrow" style="margin-bottom:16px">CURRENT COURSES</div>
-                    <div class="cert-badge glass">
-                        <div class="cert-icon">📚</div>
-                        <div>
-                            <div class="cert-name" contenteditable="true">Add Your Current Course</div>
-                            <div class="cert-org" contenteditable="true">Platform Name · In Progress</div>
-                        </div>
-                        <div class="cert-status status-wip">In Progress</div>
-                    </div>
-                    <div class="cert-badge glass">
-                        <div class="cert-icon">🏅</div>
-                        <div>
-                            <div class="cert-name" contenteditable="true">Add Completed Cert</div>
-                            <div class="cert-org" contenteditable="true">Platform Name · 2024</div>
-                        </div>
-                        <div class="cert-status status-done">Completed ✓</div>
-                    </div>
-                </div>
-                <div class="reveal-r">
-                    <div class="k8s-banner">
+                    <div class="divider" style="margin: 24px 0;"></div>
+                    
+                    <div class="k8s-banner" style="margin-bottom: 24px;">
                         <div class="k8s-title">🎯 KUBERNETES CERTIFICATION ROADMAP — CNCF</div>
-                        <div style="font-size:0.78rem;color:var(--txt3);margin-bottom:16px">Targeting all 5
-                            certifications in order
-                            of difficulty</div>
-                        <div class="cert-badge"
-                            style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:12px;margin-bottom:8px">
+                        <div style="font-size:0.78rem;color:var(--txt3);margin-bottom:16px">Targeting all 5 certifications in order of difficulty</div>
+                        <div class="cert-badge" style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:12px;margin-bottom:8px">
                             <div class="cert-icon">🟡</div>
                             <div>
                                 <div class="cert-name">KCNA — Kubernetes & Cloud Native Associate</div>
@@ -2367,8 +2399,7 @@
                             </div>
                             <div class="cert-status status-pending">⏳ Pending</div>
                         </div>
-                        <div class="cert-badge"
-                            style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:12px;margin-bottom:8px">
+                        <div class="cert-badge" style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:12px;margin-bottom:8px">
                             <div class="cert-icon">🟡</div>
                             <div>
                                 <div class="cert-name">KCSA — Kubernetes & Cloud Native Security Associate</div>
@@ -2376,8 +2407,7 @@
                             </div>
                             <div class="cert-status status-pending">⏳ Pending</div>
                         </div>
-                        <div class="cert-badge"
-                            style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.2);border-radius:12px;margin-bottom:8px">
+                        <div class="cert-badge" style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.2);border-radius:12px;margin-bottom:8px">
                             <div class="cert-icon">🔵</div>
                             <div>
                                 <div class="cert-name">CKAD — Certified Kubernetes Application Developer</div>
@@ -2385,8 +2415,7 @@
                             </div>
                             <div class="cert-status status-pending">⏳ Pending</div>
                         </div>
-                        <div class="cert-badge"
-                            style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.2);border-radius:12px;margin-bottom:8px">
+                        <div class="cert-badge" style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.2);border-radius:12px;margin-bottom:8px">
                             <div class="cert-icon">🔵</div>
                             <div>
                                 <div class="cert-name">CKA — Certified Kubernetes Administrator</div>
@@ -2394,8 +2423,7 @@
                             </div>
                             <div class="cert-status status-pending">⏳ Pending</div>
                         </div>
-                        <div class="cert-badge"
-                            style="background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.2);border-radius:12px">
+                        <div class="cert-badge" style="background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.2);border-radius:12px">
                             <div class="cert-icon">🟣</div>
                             <div>
                                 <div class="cert-name">CKS — Certified Kubernetes Security Specialist</div>
@@ -2404,22 +2432,15 @@
                             <div class="cert-status status-pending">⏳ Pending</div>
                         </div>
                     </div>
-                    <div class="glass card-pad" style="margin-top:16px">
-                        <div class="section-eyebrow" style="margin-bottom:14px">KEY LEARNINGS</div>
-                        <div style="display:flex;flex-direction:column;gap:10px">
-                            <div style="font-size:0.83rem;color:var(--txt2)" contenteditable="true">• Consistency in
-                                learning beats
-                                intelligence every time</div>
-                            <div style="font-size:0.83rem;color:var(--txt2)" contenteditable="true">• First principles
-                                thinking solves
-                                any engineering problem</div>
-                            <div style="font-size:0.83rem;color:var(--txt2)" contenteditable="true">• Infrastructure is
-                                a reflection
-                                of the thinking behind it</div>
-                            <div style="font-size:0.83rem;color:var(--txt2)" contenteditable="true">• Add your own
-                                insight here...
-                            </div>
+
+                    <div class="section-eyebrow" style="margin-bottom:16px">CURRENT COURSES</div>
+                    <div class="cert-badge glass" style="margin-bottom: 8px;">
+                        <div class="cert-icon">📚</div>
+                        <div>
+                            <div class="cert-name" contenteditable="true" spellcheck="false">Add Your Current Course</div>
+                            <div class="cert-org" contenteditable="true" spellcheck="false">Platform Name · In Progress</div>
                         </div>
+                        <div class="cert-status status-wip">In Progress</div>
                     </div>
                 </div>
             </div>
@@ -2588,6 +2609,44 @@
                         <span class="project-tag">Azure CLI</span>
                         <span class="project-tag">CI/CD</span>
                         <span class="project-tag">VS Code</span>
+                    </div>
+                </div>
+
+                <!-- AI Box Setup -->
+                <div class="glass card-pad project-card reveal d4">
+                    <div>
+                        <div class="project-header">
+                            <div class="project-icon-title">
+                                <div class="project-icon" style="background: rgba(236, 72, 153, 0.12); border-color: rgba(236, 72, 153, 0.2); color: var(--pk);">🤖</div>
+                                <div class="project-meta">
+                                    <h3 class="project-title" contenteditable="true" spellcheck="false">AI Box Infrastructure & MLOps</h3>
+                                    <span class="project-company" contenteditable="true" spellcheck="false">Production Environment Build</span>
+                                </div>
+                            </div>
+                            <span class="project-date" contenteditable="true" spellcheck="false">Feb 2024 - Present</span>
+                        </div>
+
+                        <div class="project-stats">
+                            <span class="project-stat-badge stat-uptime" style="background: rgba(236, 72, 153, 0.12); border-color: rgba(236, 72, 153, 0.25); color: var(--pk);">⚡ Real Prod Traffic</span>
+                            <span class="project-stat-badge stat-perf">🧪 Chaos Engineering</span>
+                            <span class="project-stat-badge stat-cost">🛠️ Build from Scratch</span>
+                        </div>
+
+                        <ul class="project-bullets">
+                            <li contenteditable="true" spellcheck="false">Provisioned and optimized a robust AI Box infrastructure from the ground up, implementing custom CPU/GPU resource scheduling and networking isolation.</li>
+                            <li contenteditable="true" spellcheck="false">Delivered high-performance deployment configurations and templates for automated rollout of ML models and service APIs.</li>
+                            <li contenteditable="true" spellcheck="false">Conducted comprehensive chaos engineering and load testing under real production workloads, evaluating failover speeds and system resilience.</li>
+                        </ul>
+                    </div>
+
+                    <div class="project-tags">
+                        <span class="project-tag">AI Box</span>
+                        <span class="project-tag">Chaos Engineering</span>
+                        <span class="project-tag">MLOps</span>
+                        <span class="project-tag">GPU Scheduling</span>
+                        <span class="project-tag">Kubernetes</span>
+                        <span class="project-tag">Docker</span>
+                        <span class="project-tag">Infrastructure</span>
                     </div>
                 </div>
             </div>
@@ -3187,7 +3246,7 @@
         }
 
         // ─── NAVIGATION ─────────────────────────
-        const PAGES = ['home', 'about', 'education', 'projects', 'growth', 'skills', 'goals'];
+        const PAGES = ['home', 'about', 'career', 'projects', 'growth', 'skills', 'goals'];
         function goTo(pg) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
