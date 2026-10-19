@@ -9,6 +9,7 @@ export type GrowthState = {
   completions: Record<string, string[]>;
   goals: Goal[];
   skills: SkillGroups;
+  profile: { name: string; headline: string; about: string };
   vision: Record<string, string>;
   theme: "dark" | "light";
   photoKey: string | null;
@@ -52,6 +53,11 @@ export function defaultState(): GrowthState {
     skills: Object.fromEntries(Object.entries(skillGroups).map(([group, values]) => [
       group, values.map(([name, score]) => ({ id: crypto.randomUUID(), name: String(name), score: Number(score) })),
     ])),
+    profile: {
+      name: "MR Sisodiya",
+      headline: "Cloud & DevOps Engineer · Daily Habit Builder · Lifelong Learner",
+      about: "I believe growth is a system, not a wish. I build habits with intention, monitor my progress, and keep improving. This dashboard brings daily practice, skills, and longer-term goals together so I can focus on the next useful step. My interests include cloud-native infrastructure, Kubernetes, continuous learning, and finding steady ways to become more focused and intentional.",
+    },
     vision: {
       career: "Lead cloud-native infrastructure at scale. Build resilient systems and keep learning.",
       personal: "Become a more disciplined, clear-minded version of myself through consistent habits.",
@@ -69,6 +75,9 @@ export function validState(value: unknown): value is GrowthState {
   return state.version === 1 && Array.isArray(state.habits) && Array.isArray(state.goals)
     && state.completions && typeof state.completions === "object"
     && state.skills && typeof state.skills === "object"
+    && state.profile && typeof state.profile.name === "string" && typeof state.profile.headline === "string"
+    && typeof state.profile.about === "string" && state.profile.name.length <= 100
+    && state.profile.headline.length <= 200 && state.profile.about.length <= 3000
     && state.vision && typeof state.vision === "object"
     && ["dark", "light"].includes(state.theme)
     && (state.photoKey === null || typeof state.photoKey === "string")
