@@ -10,7 +10,7 @@ S-Growth is a private personal growth dashboard rebuilt from the original single
 - Add goals, edit their names and target dates, and update progress.
 - Switch between six personal skill groups and update scores.
 - Edit the five-year vision cards, change the theme, and rotate affirmations and quotes.
-- Upload a JPEG, PNG, or WebP profile photo up to 4 MB. The uploaded image is private and served through an authenticated route.
+- Includes the existing profile headshot as the default avatar. New JPEG, PNG, or WebP uploads up to 4 MB are private and served through an authenticated route.
 - Mobile-friendly navigation and layout.
 
 ## Local development

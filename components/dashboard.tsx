@@ -36,7 +36,7 @@ export default function Dashboard() {
   const [newHabit, setNewHabit] = useState("");
   const [quoteIndex, setQuoteIndex] = useState(0);
   const [affirmIndex, setAffirmIndex] = useState(0);
-  const [photoUrl, setPhotoUrl] = useState("");
+  const [photoUrl, setPhotoUrl] = useState("/profile.jpg");
   const [chartPeriod, setChartPeriod] = useState<"week" | "month">("week");
   const stateRef = useRef<GrowthState | null>(null);
   const saveQueue = useRef(Promise.resolve());
@@ -48,7 +48,7 @@ export default function Dashboard() {
     const data = await response.json() as GrowthState;
     stateRef.current = data;
     setState(data);
-    if (data.photoKey) setPhotoUrl(`/api/photo?t=${Date.now()}`);
+    setPhotoUrl(data.photoKey ? `/api/photo?t=${Date.now()}` : "/profile.jpg");
   }, []);
 
   useEffect(() => {
@@ -101,7 +101,7 @@ export default function Dashboard() {
 
   const logout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
-    setAuthenticated(false); setState(null); setPhotoUrl(""); setSection("home");
+    setAuthenticated(false); setState(null); setPhotoUrl("/profile.jpg"); setSection("home");
   };
 
   const handlePhoto = async (event: ChangeEvent<HTMLInputElement>) => {
