@@ -1,5 +1,6 @@
 export type Habit = { id: string; name: string; active: boolean };
-export type Goal = { id: string; title: string; icon: string; progress: number; deadline: string };
+export type Goal = { id: string; title: string; icon: string; progress: number; deadline: string; category?: string; reward?: string };
+export type WellnessEntry = { date: string; weight: number; waist?: number; hips?: number; chest?: number };
 export type Skill = { id: string; name: string; score: number };
 export type SkillGroups = Record<string, Skill[]>;
 
@@ -13,6 +14,7 @@ export type GrowthState = {
   vision: Record<string, string>;
   theme: "dark" | "light";
   photoKey: string | null;
+  wellness?: WellnessEntry[];
 };
 
 const skillGroups: Record<string, [string, number][]> = {
@@ -43,12 +45,12 @@ export function defaultState(): GrowthState {
     habits: names.map((name) => ({ id: crypto.randomUUID(), name, active: true })),
     completions: {},
     goals: [
-      { icon: "🏋️", title: "Exercise every day for 90 days", progress: 35, deadline: "Sep 2026" },
-      { icon: "📚", title: "Read 12 books this year", progress: 50, deadline: "Dec 2026" },
-      { icon: "🧘", title: "Meditate 10 min daily — no breaks", progress: 60, deadline: "Dec 2026" },
-      { icon: "☸️", title: "Pass CKA certification", progress: 20, deadline: "Oct 2026" },
-      { icon: "✍️", title: "Journal every single day", progress: 75, deadline: "Dec 2026" },
-      { icon: "🗣️", title: "Public speaking — give 3 talks", progress: 15, deadline: "Dec 2026" },
+      { icon: "🏋️", title: "Exercise every day for 90 days", progress: 35, deadline: "Sep 2026", category: "Health & Fitness", reward: "A day outdoors" },
+      { icon: "📚", title: "Read 12 books this year", progress: 50, deadline: "Dec 2026", category: "Personal Growth", reward: "A new book" },
+      { icon: "🧘", title: "Meditate 10 min daily — no breaks", progress: 60, deadline: "Dec 2026", category: "Health & Fitness", reward: "A slow weekend" },
+      { icon: "☸️", title: "Pass CKA certification", progress: 20, deadline: "Oct 2026", category: "Career Growth", reward: "Celebrate with friends" },
+      { icon: "✍️", title: "Journal every single day", progress: 75, deadline: "Dec 2026", category: "Personal Growth", reward: "A fresh journal" },
+      { icon: "🗣️", title: "Public speaking — give 3 talks", progress: 15, deadline: "Dec 2026", category: "Career Growth", reward: "A favorite meal" },
     ].map((goal) => ({ ...goal, id: crypto.randomUUID() })),
     skills: Object.fromEntries(Object.entries(skillGroups).map(([group, values]) => [
       group, values.map(([name, score]) => ({ id: crypto.randomUUID(), name: String(name), score: Number(score) })),
@@ -66,6 +68,7 @@ export function defaultState(): GrowthState {
     },
     theme: "dark",
     photoKey: null,
+    wellness: [],
   };
 }
 
@@ -83,3 +86,4 @@ export function validState(value: unknown): value is GrowthState {
     && (state.photoKey === null || typeof state.photoKey === "string")
     && JSON.stringify(value).length < 1_000_000;
 }
+
